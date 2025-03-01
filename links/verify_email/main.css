@@ -33,6 +33,20 @@ main {
 
 #email_verified {
     display: none;
+    height: 600px;
+    width: 420px;
+    background-color: #1c1e1f;
+    text-align: center;
+    font-family: sans-serif;
+    padding: 5px;
+    margin: 0px;
+    min-width: 400px;
+    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    font-weight: bolder;
 }
 
 .loader {

@@ -59,8 +59,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log('Email verified!');
                 clearInterval(interval);
 
-                document.getElementById("email_verified").style.display = "block";
                 document.getElementById("email").style.display = "none";
+                document.getElementById("email_verified").style.display = "display";
 
                 const messageDiv = document.getElementById('response-message2');
                 messageDiv.textContent = 'Email verified!';
