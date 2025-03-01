@@ -30,11 +30,16 @@ document.addEventListener('DOMContentLoaded', async function () {
             window.close();
         }, 5000);
     } else {
-        document.getElementById("verifying").style.display = "none";
-        document.getElementById("error").style.display = "flex";
-
-        messageDiv.textContent = 'Something went wrong!';
-        messageDiv.style.color = 'red';
+        if (result.message == "Already verified") {
+            document.getElementById("verifying").style.display = "none";
+            document.getElementById("verified").style.display = "flex";
+            document.getElementById("name").textContent = "Already verified!";
+        } else {
+            document.getElementById("verifying").style.display = "none";
+            document.getElementById("error").style.display = "flex";
+            messageDiv.textContent = 'Something went wrong!';
+            messageDiv.style.color = 'red';
+        }
     }
 });
 
