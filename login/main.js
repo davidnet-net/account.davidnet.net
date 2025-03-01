@@ -57,7 +57,7 @@ function handleErrors(error) {
     if (error.includes('Invalid username')) {
         document.getElementById('username').classList.add('error-input');
         document.getElementById('username-error').textContent = 'Incorrect username.';
-    } else if (error.includes('Invalid password]')) {
+    } else if (error.includes('Invalid password')) {
         document.getElementById('password').classList.add('error-input');
         document.getElementById('password-error').textContent = 'Incorrect password.';
     } else if (error.includes('Missing fields')) {
