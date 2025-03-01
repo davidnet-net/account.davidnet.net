@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     console.log(window.location.hash);
 
-    if (window.location.hash === "newcode") {
+    if (window.location.hash === "#newcode") {
         const requestData = {};
 
         try {
@@ -29,10 +29,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 body: JSON.stringify(requestData),
             });
 
+            console.log(response);
+            console.log(response.body.json);
+
             if (response.ok) {
                 const messageDiv = document.getElementById('response-message');
                 messageDiv.textContent = 'New email sended.';
                 messageDiv.style.color = 'green';
+
                 setTimeout(() => {
                     window.location = "https://account.davidnet.net/links/verify_email?token=" + token
                 }, 1500);
