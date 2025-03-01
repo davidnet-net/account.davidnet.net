@@ -1,11 +1,12 @@
 body {
     background-color: #181a1b;
     margin: 0;
-    padding: 40px;
+    padding: 0px;
     font-family: sans-serif;
+    min-height: 100vh;
 }
 
-p, h1 {
+p, label, h1 {
     color: white;
     text-align: center;
 }
@@ -13,4 +14,11 @@ p, h1 {
 a {
     color: #9ccfba;
     text-decoration: none;
+}
+
+input {
+    all: unset;
+    background-color: #1c1e1f;
+    text-align: left;
+    color: rgb(170, 168, 168);
 }

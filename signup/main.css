@@ -1,0 +1,26 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#signup {
+    height: fit-content;
+    width: fit-content;
+    background-color: #1c1e1f;
+    text-align: center;
+    font-family: sans-serif;
+    padding: 5px;
+    margin: 0px;
+    min-width: 400px;
+    border-radius: 8px;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+}
+
+.error-input {
+    border: 1px solid red;
+}

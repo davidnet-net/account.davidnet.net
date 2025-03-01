@@ -6,14 +6,34 @@
 
     <head>
         <meta name="description" content="Create an davidnet account.">
-        <link rel="icon" href="https://account.davidnet.net/favicon.png" type="image/png">
+        <link rel="icon" href="h/favicon.png" type="image/png">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8">
-        <link rel="stylesheet" href="https://account.davidnet.net">
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="main.css">
     </head>
 
 <body>
-
+    <div id="signup">
+        <h1>Sign up</h1>
+        <form id="signup-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br>
+            <div id="username-error" class="error"></div><br>
+    
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+            <div id="email-error" class="error"></div><br>
+    
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+            <div id="password-error" class="error"></div><br>
+    
+            <button type="submit">Sign Up</button>
+        </form>
+        <div id="response-message"></div>
+    </div>
+    <script src="main.js"></script>
 </body>
 
 </html>
