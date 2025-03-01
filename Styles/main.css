@@ -1,0 +1,16 @@
+body {
+    background-color: #181a1b;
+    margin: 0;
+    padding: 40px;
+    font-family: sans-serif;
+}
+
+p, h1 {
+    color: white;
+    text-align: center;
+}
+
+a {
+    color: #9ccfba;
+    text-decoration: none;
+}
