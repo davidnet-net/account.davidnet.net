@@ -72,6 +72,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const messageDiv = document.getElementById('response-message2');
                 messageDiv.textContent = 'Email verified!';
                 messageDiv.style.color = 'green';
+
+                setTimeout(() => {
+                    window.location = "https://account.davidnet.net/login";
+                }, 3000);
             }
         } catch (error) {
             console.error("Error checking email status:", error);
