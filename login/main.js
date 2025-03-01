@@ -35,6 +35,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         // Show response message
         const messageDiv = document.getElementById('response-message2');
         if (response.ok) {
+            console.log(response);
+            console.log(response.json().message);
             messageDiv.textContent = 'Login successful!';
             messageDiv.style.color = 'green';
         } else {
