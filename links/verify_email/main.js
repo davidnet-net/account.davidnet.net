@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         const result = response.json();
+        console.log(result);
 
         if (result.status == 1) {
             console.log('Email verified!');
