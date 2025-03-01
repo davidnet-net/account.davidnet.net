@@ -102,3 +102,11 @@ function clearErrors() {
     const errorInputs = document.querySelectorAll('.error-input');
     errorInputs.forEach(input => input.classList.remove('error-input'));
 }
+
+import { is_session_valid, get_session_information } from './session.js';
+onDOMContentLoaded(() => {
+    if (is_session_valid == true) {
+        window.location = "https://account.davidnet.net/account/"
+    }
+});
+  
