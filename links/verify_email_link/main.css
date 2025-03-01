@@ -1,0 +1,17 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.verified {
+    height: 600px;
+    width: 420px;
+    background-color: #1c1e1f;
+    text-align: center;
+    font-family: sans-serif;
+    padding: 5px;
+    margin: 0px;
+    min-width: 400px;
+    border-radius: 8px;
+}
