@@ -11,8 +11,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
         console.log(token);
     }
+    console.log(window.location.hash);
 
-    if (window.location.hash === "#newcode") {
+    if (window.location.hash === "newcode") {
         const requestData = {};
 
         try {
