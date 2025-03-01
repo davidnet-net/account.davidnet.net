@@ -1,12 +1,12 @@
-body {
+main {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 #signup {
-    height: fit-content;
-    width: fit-content;
+    height: 620px;
+    width: 420px;
     background-color: #1c1e1f;
     text-align: center;
     font-family: sans-serif;
