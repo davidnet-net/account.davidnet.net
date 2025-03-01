@@ -26,17 +26,12 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             },
             body: JSON.stringify(requestData),
         });
-
         const result = await response.json();
-
-        // Debug: Log result to check the server response
-        console.log(result);
-
+        
         // Show response message
         const messageDiv = document.getElementById('response-message2');
         if (response.ok) {
-            console.log(response);
-            console.log(response.message);
+            console.log(result.message);
             messageDiv.textContent = 'Login successful!';
             messageDiv.style.color = 'green';
         } else {
