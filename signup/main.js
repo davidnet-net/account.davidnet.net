@@ -28,6 +28,9 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
 
         const result = await response.json();
 
+        // Debug: Log result to check the server response
+        console.log(result);
+
         // Show response message
         const messageDiv = document.getElementById('response-message');
         if (response.ok) {
@@ -46,6 +49,8 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
 });
 
 function handleErrors(error) {
+    console.log('Handling error:', error); // Debugging error
+
     if (error.includes('Invalid username')) {
         document.getElementById('username').classList.add('error-input');
         document.getElementById('username-error').textContent = 'Please enter a valid username.';
@@ -77,7 +82,6 @@ function handleErrors(error) {
         messageDiv.style.color = 'red';
     }
 }
-
 
 function clearErrors() {
     // Clear all error messages and input highlights
