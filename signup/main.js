@@ -31,14 +31,15 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
 
         const result = await response.json();
 
-        // Debug: Log result to check the server response
-        console.log(result);
-
         // Show response message
         const messageDiv = document.getElementById('response-message2');
         if (response.ok) {
             messageDiv.textContent = 'Signup successful!';
             messageDiv.style.color = 'green';
+
+            setTimeout(() => {
+                window.location = "https://account.davidnet.net/links/verify_email?token=" + result.email_token
+            }, 1500);
         } else {
             handleErrors(result.error);
             document.getElementById("signup").style.display = "block";

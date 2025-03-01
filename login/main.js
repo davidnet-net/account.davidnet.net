@@ -34,9 +34,13 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             messageDiv.textContent = 'Login successful!';
             messageDiv.style.color = 'green';
 
-            setTimeout(() => {
-                window.location = "https://account.davidnet.net/links/verify_email?token=" + result.email_token
-            }, 1500);
+            if (result.message = "verify_email") {
+                setTimeout(() => {
+                    window.location = "https://account.davidnet.net/links/verify_email?token=" + result.email_token
+                }, 1500);
+            } else {
+                //TODO GIVE SESSION ETC
+            }
         } else {
             handleErrors(result.error);
             document.getElementById("login").style.display = "block";
