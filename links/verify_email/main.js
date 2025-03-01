@@ -1,44 +1,34 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
+    const newcodeParam = urlParams.get("newcode");
 
     if (!token) {
         const messageDiv = document.getElementById('response-message');
-        messageDiv.textContent = 'Something wrent wrong!';
+        messageDiv.textContent = 'Something went wrong!';
         messageDiv.style.color = 'red';
         console.error("Missing token.");
-        return
-    } else {
-        console.log(token);
+        return;
     }
-    console.log(window.location.hash);
 
-    if (window.location.hash === "#newcode") {
+    const isNewCode = window.location.hash === "#newcode" || newcodeParam !== null;
+
+    if (isNewCode) {
         document.getElementById("newsender").style.display = "none";
 
         try {
-            const requestData = {
-                token: token,
-            };
-
             const response = await fetch('https://auth.davidnet.net/new_email_code', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
             });
 
-            console.log(response);
-            console.log(response.body.json);
-
+            const messageDiv = document.getElementById('response-message');
             if (response.ok) {
-                const messageDiv = document.getElementById('response-message');
-                messageDiv.textContent = 'New email sended.';
+                messageDiv.textContent = 'New email sent.';
                 messageDiv.style.color = 'green';
             } else {
-                const messageDiv = document.getElementById('response-message');
-                messageDiv.textContent = 'Something wrent wrong!';
+                messageDiv.textContent = 'Something went wrong!';
                 messageDiv.style.color = 'red';
             }
         } catch (error) {
