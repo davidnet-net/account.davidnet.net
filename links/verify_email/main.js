@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log(window.location.hash);
 
     if (window.location.hash === "#newcode") {
-        const requestData = {};
+        document.getElementById("newsender").style.display = "block";
 
         try {
             const requestData = {
@@ -36,10 +36,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const messageDiv = document.getElementById('response-message');
                 messageDiv.textContent = 'New email sended.';
                 messageDiv.style.color = 'green';
-
-                setTimeout(() => {
-                    window.location = "https://account.davidnet.net/links/verify_email?token=" + token
-                }, 1500);
             } else {
                 const messageDiv = document.getElementById('response-message');
                 messageDiv.textContent = 'Something wrent wrong!';
