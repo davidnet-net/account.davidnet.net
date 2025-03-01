@@ -6,9 +6,13 @@ body {
     min-height: 100vh;
 }
 
-p, label, h1 {
+p, h1 {
     color: white;
     text-align: center;
+}
+
+label {
+    color: rgb(170, 168, 168);
 }
 
 a {
@@ -20,5 +24,5 @@ input {
     all: unset;
     background-color: #181a1b;
     text-align: left;
-    color: rgb(170, 168, 168);
+    color: #ffffff
 }
