@@ -13,13 +13,21 @@
     </head>
 
 <body>
-    <nav>
-        <a href="https://davidnet.net">Home</a>
-        <a href="/signup/">Sign-up</a>
-    </nav>
     <main>
-        <div class="verified">
+        <div class="verified" id="verifying">
+            <h1>Verifying</h1>
+            <span class="loader"></span>
+            <h2>Please wait!</h2>
+        </div>
+        <div class="verified" id="verified">
             <h1>Verified</h1>
+            <img src="/icons/verified.svg" height="50%" width="50%">
+            <h2>You can close this tab now!</h2>
+        </div>
+        <div class="verified" id="error">
+            <h1>Verified</h1>
+            <img src="/icons/error.svg" height="50%" width="50%">
+            <h2 id="response-message">Something wrent wrong!</h2>
         </div>
     </main>
     <script src="main.js"></script>

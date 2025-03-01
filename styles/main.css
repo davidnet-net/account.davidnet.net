@@ -40,7 +40,7 @@ main {
     min-height: calc(100vh - 50px);
 }
 
-p, h1 {
+p, h1, h2, h3 {
     color: white;
     text-align: center;
 }
