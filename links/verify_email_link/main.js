@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             window.close();
         }, 5000);
     } else {
-        if (result.message == "Already verified") {
+        if (result.error == "Already verified") {
             document.getElementById("verifying").style.display = "none";
             document.getElementById("verified").style.display = "flex";
             document.getElementById("name").textContent = "Already verified!";
