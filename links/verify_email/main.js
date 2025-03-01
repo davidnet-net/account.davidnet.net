@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 clearInterval(interval);
 
                 document.getElementById("email").style.display = "none";
-                document.getElementById("email_verified").style.display = "display";
+                document.getElementById("email_verified").style.display = "flex";
 
                 const messageDiv = document.getElementById('response-message2');
                 messageDiv.textContent = 'Email verified!';
