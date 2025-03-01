@@ -52,6 +52,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 body: JSON.stringify({ token })
             });
 
+            if (!response.ok) {
+                const messageDiv = document.getElementById('response-message');
+                messageDiv.textContent = 'Invalid token!';
+                messageDiv.style.color = 'red';
+                clearInterval(interval);
+            }
+
             const result = await response.json();  // Correcting here
             console.log(result);
 
