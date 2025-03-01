@@ -1,6 +1,9 @@
 document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    document.getElementById("signup").style.display = "none";
+    document.getElementById("signingup").style.display = "flex";
+
     // Clear previous errors
     clearErrors();
 
@@ -32,17 +35,19 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
         console.log(result);
 
         // Show response message
-        const messageDiv = document.getElementById('response-message');
+        const messageDiv = document.getElementById('response-message2');
         if (response.ok) {
             messageDiv.textContent = result.message || 'Signup successful!';
             messageDiv.style.color = 'green';
         } else {
             handleErrors(result.error);
+            document.getElementById("signup").style.display = "block";
+            document.getElementById("signingup").style.display = "none";
         }
 
     } catch (error) {
         console.error(error);
-        const messageDiv = document.getElementById('response-message');
+        const messageDiv = document.getElementById('response-message2');
         messageDiv.textContent = 'Network error. Please try again later.';
         messageDiv.style.color = 'red';
     }
