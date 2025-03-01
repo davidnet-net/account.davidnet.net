@@ -10,11 +10,7 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
 
     // Prepare the data to send to the server
-    const requestData = {
-        username: username,
-        email: email,
-        password: password,
-    };
+    const requestData = { username, email, password };
 
     try {
         // Make the POST request
@@ -40,41 +36,48 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
     } catch (error) {
         console.error(error);
         const messageDiv = document.getElementById('response-message');
-        messageDiv.textContent = 'Network error. Please try again later.';
+        messageDiv.textContent = 'Oops! Something went wrong. Please try again later.';
         messageDiv.style.color = 'red';
     }
 });
 
 function handleErrors(error) {
-    if (error.includes('Invalid username')) {
-        document.getElementById('username').classList.add('error-input');
-        document.getElementById('username-error').textContent = error;
-    } else if (error.includes('Invalid email')) {
-        document.getElementById('email').classList.add('error-input');
-        document.getElementById('email-error').textContent = error;
-    } else if (error.includes('Too big username')) {
-        document.getElementById('username').classList.add('error-input');
-        document.getElementById('username-error').textContent = error;
-    } else if (error.includes('Too big email')) {
-        document.getElementById('email').classList.add('error-input');
-        document.getElementById('email-error').textContent = error;
-    } else if (error.includes('Missing fields')) {
-        if (!document.getElementById('username').value) {
-            document.getElementById('username').classList.add('error-input');
-            document.getElementById('username-error').textContent = 'Username is required';
+    const errorMessages = {
+        'Invalid username': 'The username is invalid. Please choose a valid username.',
+        'Invalid email': 'The email address is not valid. Please provide a valid email.',
+        'Too big username': 'The username is too long. Please use a shorter username.',
+        'Too big email': 'The email address is too long. Please use a shorter email.',
+        'Missing fields': {
+            username: 'Username is required.',
+            email: 'Email is required.',
+            password: 'Password is required.'
         }
-        if (!document.getElementById('email').value) {
-            document.getElementById('email').classList.add('error-input');
-            document.getElementById('email-error').textContent = 'Email is required';
-        }
-        if (!document.getElementById('password').value) {
-            document.getElementById('password').classList.add('error-input');
-            document.getElementById('password-error').textContent = 'Password is required';
+    };
+
+    if (errorMessages[error]) {
+        if (typeof errorMessages[error] === 'string') {
+            displayError(error, errorMessages[error]);
+        } else {
+            // Handle missing fields
+            Object.entries(errorMessages[error]).forEach(([field, message]) => {
+                if (!document.getElementById(field).value) {
+                    displayError(field, message);
+                }
+            });
         }
     } else {
         const messageDiv = document.getElementById('response-message');
-        messageDiv.textContent = 'Something went wrong!';
+        messageDiv.textContent = 'An unexpected error occurred. Please try again.';
         messageDiv.style.color = 'red';
+    }
+}
+
+function displayError(field, message) {
+    const input = document.getElementById(field);
+    input.classList.add('error-input');
+    const errorField = document.getElementById(`${field}-error`);
+    if (errorField) {
+        errorField.textContent = message;
     }
 }
 
