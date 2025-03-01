@@ -45,10 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const interval = setInterval(async () => {
-        console.log('Running every 2.5 seconds...');
-        
         const response = await fetch('https://auth.davidnet.net/email_status', {
-            method: 'GET',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token })
         });
