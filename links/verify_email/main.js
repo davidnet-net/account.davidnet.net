@@ -43,4 +43,28 @@ document.addEventListener("DOMContentLoaded", async () => {
             messageDiv.style.color = 'red';
         }
     }
+
+    const interval = setInterval(async () => {
+        console.log('Running every 2.5 seconds...');
+        
+        const response = await fetch('https://auth.davidnet.net/email_status', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token })
+        });
+
+        const result = response.json();
+
+        if (result.status == 1) {
+            console.log('Email verified!');
+            clearInterval(interval);
+
+            document.getElementById("email_verified").style.display = "block";
+            document.getElementById("email").style.display = "none";
+
+            const messageDiv = document.getElementById('response-message2');
+            messageDiv.textContent = 'Email verified!';
+            messageDiv.style.color = 'green';
+        }
+    }, 2500);
 });
