@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const requestData = {};
 
         try {
+            const requestData = {
+                token: token,
+            };
+
             const response = await fetch('https://auth.davidnet.net/new_email_code', {
                 method: 'POST',
                 headers: {
