@@ -11,16 +11,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // Dynamisch de link configureren
+    // Dynamically configure the link
     const senderLink = document.getElementById("newsender");
     senderLink.href = `?token=${token}&newcode=true`;
 
-    // Verberg de link direct als 'newcode' aanwezig is
+    // Hide the link if 'newcode' is present
     if (newcodeParam !== null || window.location.hash === "#newcode") {
         document.getElementById("newsender").style.display = "none";
     }
 
-    // Verwerk de actie voor nieuwe code
+    // Handle new code action
     if (newcodeParam !== null || window.location.hash === "#newcode") {
         try {
             const response = await fetch('https://auth.davidnet.net/new_email_code', {
@@ -45,25 +45,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const interval = setInterval(async () => {
-        const response = await fetch('https://auth.davidnet.net/email_status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token })
-        });
+        try {
+            const response = await fetch('https://auth.davidnet.net/email_status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+            });
 
-        const result = response.json();
-        console.log(result);
+            const result = await response.json();  // Correcting here
+            console.log(result);
 
-        if (result.status == 1) {
-            console.log('Email verified!');
-            clearInterval(interval);
+            if (result.status == 1) {
+                console.log('Email verified!');
+                clearInterval(interval);
 
-            document.getElementById("email_verified").style.display = "block";
-            document.getElementById("email").style.display = "none";
+                document.getElementById("email_verified").style.display = "block";
+                document.getElementById("email").style.display = "none";
 
-            const messageDiv = document.getElementById('response-message2');
-            messageDiv.textContent = 'Email verified!';
-            messageDiv.style.color = 'green';
+                const messageDiv = document.getElementById('response-message2');
+                messageDiv.textContent = 'Email verified!';
+                messageDiv.style.color = 'green';
+            }
+        } catch (error) {
+            console.error("Error checking email status:", error);
         }
     }, 2500);
 });
