@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         body: JSON.stringify({ token })
     });
 
+    const result = await response.json();  // Correcting here
+    console.log(result);
+
     if (response.ok) {
         document.getElementById("verifying").style.display = "none";
         document.getElementById("verified").style.display = "flex";
