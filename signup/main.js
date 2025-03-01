@@ -57,10 +57,10 @@ function handleErrors(error) {
     } else if (error.includes('Invalid email')) {
         document.getElementById('email').classList.add('error-input');
         document.getElementById('email-error').textContent = 'Please enter a valid email address.';
-    } else if (error.includes('Too long username')) {
+    } else if (error.includes('Too big username')) {
         document.getElementById('username').classList.add('error-input');
         document.getElementById('username-error').textContent = 'Username is too long. Please shorten it.';
-    } else if (error.includes('Too long email')) {
+    } else if (error.includes('Too big email')) {
         document.getElementById('email').classList.add('error-input');
         document.getElementById('email-error').textContent = 'Email is too long. Please shorten it.';
     } else if (error.includes('Missing fields')) {
