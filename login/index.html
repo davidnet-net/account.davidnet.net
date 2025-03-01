@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-    <title>DN - Signup</title>
+    <title>DN - Login</title>
 
     <head>
-        <meta name="description" content="Create an davidnet account.">
+        <meta name="description" content="Login into your davidnet account.">
         <link rel="icon" href="h/favicon.png" type="image/png">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8">
@@ -18,30 +18,30 @@
         <a href="https://davidnet.net">Home</a>
     </nav>
     <main>
-        <div class="signup" id="signup">
-            <h1>Sign-up</h1>
-            <form id="signup-form">
+        <div class="login" id="login">
+            <h1>Login</h1>
+            <form id="login-form">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required><br>
                 <div id="username-error" class="error"></div><br>
-        
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required><br>
-                <div id="email-error" class="error"></div><br>
-        
+
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required><br>
                 <div id="password-error" class="error"></div><br>
-        
-                <button type="submit">Sign Up</button>
-            </form>
+
+                <button type="submit">Login</button>
+            </form> 
             <div id="response-message"></div>
             <br>
-            <p>By signing up you agree to the,</p>
-            <p><a href="https://docs.davidnet.net/legal/terms_of_service/">Terms of Service</a> and <a href="https://docs.davidnet.net/legal/privacy_policy/">Privacy Policy</a> </p>
-            <a style="color: gray;" href="/login/">Back to login</a>
+            <br>
+            <a href="/">Forgot password</a>
+            <br>
+            <br>
+            <p><a style="color: gray;" href="https://docs.davidnet.net/legal/terms_of_service/">Terms of service</a> |
+                <a href="https://docs.davidnet.net/legal/privacy_policy/" style="color: gray;">Privacy policy</a></p>
+            <a href="/signup/">Sign-up</a>
         </div>
-        <div class="signup" id="signingup">
+        <div class="login" id="loggingin">
             <span class="loader"></span>
             <div id="response-message2"></div>
         </div>
