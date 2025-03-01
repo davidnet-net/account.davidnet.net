@@ -48,35 +48,36 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
 function handleErrors(error) {
     if (error.includes('Invalid username')) {
         document.getElementById('username').classList.add('error-input');
-        document.getElementById('username-error').textContent = error;
+        document.getElementById('username-error').textContent = 'Please enter a valid username.';
     } else if (error.includes('Invalid email')) {
         document.getElementById('email').classList.add('error-input');
-        document.getElementById('email-error').textContent = error;
-    } else if (error.includes('Too big username')) {
+        document.getElementById('email-error').textContent = 'Please enter a valid email address.';
+    } else if (error.includes('Too long username')) {
         document.getElementById('username').classList.add('error-input');
-        document.getElementById('username-error').textContent = error;
-    } else if (error.includes('Too big email')) {
+        document.getElementById('username-error').textContent = 'Username is too long. Please shorten it.';
+    } else if (error.includes('Too long email')) {
         document.getElementById('email').classList.add('error-input');
-        document.getElementById('email-error').textContent = error;
+        document.getElementById('email-error').textContent = 'Email is too long. Please shorten it.';
     } else if (error.includes('Missing fields')) {
         if (!document.getElementById('username').value) {
             document.getElementById('username').classList.add('error-input');
-            document.getElementById('username-error').textContent = 'Username is required';
+            document.getElementById('username-error').textContent = 'Username is required. Please fill it out.';
         }
         if (!document.getElementById('email').value) {
             document.getElementById('email').classList.add('error-input');
-            document.getElementById('email-error').textContent = 'Email is required';
+            document.getElementById('email-error').textContent = 'Email is required. Please fill it out.';
         }
         if (!document.getElementById('password').value) {
             document.getElementById('password').classList.add('error-input');
-            document.getElementById('password-error').textContent = 'Password is required';
+            document.getElementById('password-error').textContent = 'Password is required. Please fill it out.';
         }
     } else {
         const messageDiv = document.getElementById('response-message');
-        messageDiv.textContent = 'Something went wrong!';
+        messageDiv.textContent = 'Something went wrong. Please try again later.';
         messageDiv.style.color = 'red';
     }
 }
+
 
 function clearErrors() {
     // Clear all error messages and input highlights
