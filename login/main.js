@@ -39,7 +39,8 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
                     window.location = "https://account.davidnet.net/links/verify_email?token=" + result.email_token
                 }, 1500);
             } else {
-                //TODO GIVE SESSION ETC
+                localStorage.setItem('session-token', result.session_token);
+                console.log("Stored session_token: " + result.session_token);
             }
         } else {
             handleErrors(result.error);
