@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log(window.location.hash);
 
     if (window.location.hash === "#newcode") {
-        document.getElementById("newsender").style.display = "block";
+        document.getElementById("newsender").style.display = "none";
 
         try {
             const requestData = {
