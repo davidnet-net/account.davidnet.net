@@ -44,7 +44,7 @@ async function getSessions(sessionToken, userid) {
 
 // Display session information on the page
 function displaySession(session, sessionInfo) {
-  const { id, ip, created_at } = session;
+  const { id, ip, created_at, useragent } = session;
   const sessionDiv = document.getElementById("sessions");
 
   if (!sessionDiv) {
@@ -59,6 +59,7 @@ function displaySession(session, sessionInfo) {
             <h3>${id}</h3>
             <p class="lefttext"><strong>IP:</strong><br>${ip}</p>
             <p class="lefttext"><strong>UTC Creationdate:</strong><br>${formattedDate}</p>
+            <p class="lefttext"><strong>Useragent:</strong><br>${useragent}</p>
             <button class="logout-btn" id="logout-btn-${id}">Log out</button>
         </div>
     `;
