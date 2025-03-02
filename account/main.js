@@ -171,6 +171,7 @@ async function updateUserInfo() {
 document.addEventListener("DOMContentLoaded", async () => {
   await loadSessions();
   await updateUserInfo();
+  document.getElementById("modal-btn-open").addEventListener("click", openModal);
 });
 
 function openModal() {
