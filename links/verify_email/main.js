@@ -59,23 +59,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                 clearInterval(interval);
             }
 
-            const result = await response.json();  // Correcting here
-            console.log(result);
+            // Check if the response body is empty before trying to parse it
+            const responseBody = await response.text();
+            if (responseBody) {
+                const result = JSON.parse(responseBody);  // Only parse if there's content
+                console.log(result);
 
-            if (result.status == 1) {
-                console.log('Email verified!');
-                clearInterval(interval);
+                if (result.status == 1) {
+                    console.log('Email verified!');
+                    clearInterval(interval);
 
-                document.getElementById("email").style.display = "none";
-                document.getElementById("email_verified").style.display = "flex";
+                    document.getElementById("email").style.display = "none";
+                    document.getElementById("email_verified").style.display = "flex";
 
-                const messageDiv = document.getElementById('response-message2');
-                messageDiv.textContent = 'Email verified!';
-                messageDiv.style.color = 'green';
+                    const messageDiv = document.getElementById('response-message2');
+                    messageDiv.textContent = 'Email verified!';
+                    messageDiv.style.color = 'green';
 
-                setTimeout(() => {
-                    window.location = "https://account.davidnet.net/login";
-                }, 3000);
+                    setTimeout(() => {
+                        window.location = "https://account.davidnet.net/login";
+                    }, 3000);
+                }
+            } else {
+                console.error("Empty response body");
             }
         } catch (error) {
             console.error("Error checking email status:", error);
