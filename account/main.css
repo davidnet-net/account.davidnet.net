@@ -11,9 +11,18 @@ main {
   background-color: #1c1e1f;
   text-align: center;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   border-radius: 15px;
   justify-content: space-evenly;
+}
+
+@media (max-width: 600px) {
+  #background {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
 }
 
 .lefttext {
