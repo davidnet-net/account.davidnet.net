@@ -142,6 +142,7 @@ form {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  font-family: sans-serif;
 }
 
 .modal.active {
