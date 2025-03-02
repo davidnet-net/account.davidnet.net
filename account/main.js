@@ -1,4 +1,11 @@
-import { is_session_valid, get_session_information, get_session_token } from '/session.js';
+import { is_session_valid, get_session_information } from './session.js';
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const valid = await is_session_valid();
+    if (valid === false) {
+        window.location.href = "https://account.davidnet.net/login/";
+    }
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
     if (is_session_valid() === false) {

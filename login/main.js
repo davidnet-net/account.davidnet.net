@@ -41,6 +41,10 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
             } else {
                 localStorage.setItem('session-token', result.session_token);
                 console.log("Stored session_token: " + result.session_token);
+
+                setTimeout(() => {
+                    window.location = "https://account.davidnet.net/account";
+                }, 1500);
             }
         } else {
             handleErrors(result.error);
@@ -91,9 +95,11 @@ function clearErrors() {
 
 
 
-import { is_session_valid, get_session_information } from '/session.js';
-document.addEventListener("DOMContentLoaded", (event) => {
-    if (is_session_valid == true) {
-        window.location = "https://account.davidnet.net/account/"
+import { is_session_valid, get_session_information } from './session.js';
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const valid = await is_session_valid();
+    if (valid === true) {
+        window.location.href = "https://account.davidnet.net/account/";
     }
 });
