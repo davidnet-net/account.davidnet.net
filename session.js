@@ -54,3 +54,7 @@ export async function get_session_information(params) {
         return false
     }
 }
+
+export async function get_session_token() {
+    return localStorage.getItem('session-token')
+}

@@ -1,0 +1,46 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#background {
+    height: 92vw;
+    width: 90vh;
+    background-color: #1c1e1f;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    border-radius: 15px;
+}
+
+.lefttext {
+    text-align: left;
+}
+
+#userinfo {
+    padding-left: 25px;
+    padding-right: 25px;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 500px;
+}
+
+#sessions {
+    padding-left: 25px;
+    padding-right: 25px;
+    width: 200px;
+    min-height: 500px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.session {
+    border-radius: 15px;
+    background-color: #181a1b;
+    padding-left: 20px;
+    padding-right: 20px;
+}
