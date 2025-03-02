@@ -103,7 +103,7 @@ function display_session(id, ip, creationdate) {
     const logoutButton = document.getElementById(`logout-btn-${id}`);
     if (logoutButton) {
         logoutButton.addEventListener('click', () => handleLogout(id));
-        console.log("Connected logout button:   " + "logout-btn-${id}")
+        console.log("Connected logout button:   " + `logout-btn-${id}`)
     } else {
         console.warn("Log out button not found")
     }
