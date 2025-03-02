@@ -1,5 +1,21 @@
 import { is_session_valid, get_session_information, get_session_token } from '/session.js';
 
+// Define the handleLogout function globally
+async function handleLogout(id) {
+    const logout = async () => {
+        const token = await get_session_token();
+        const response = await fetch('https://auth.davidnet.net/delete_sesion', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: token, session_id: id }),
+        });
+        return (await response.json()).email;
+    };
+
+    const email = await logout();
+    console.log("Logged out session from email:", email);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     const valid = await is_session_valid();
     if (!valid) {
@@ -78,19 +94,4 @@ function display_session(id, ip, creationdate) {
     `;
 
     sessionDiv.innerHTML += sessionHTML;
-}
-
-async function handleLogout(id) {
-    const logout = async () => {
-        const token = await get_session_token();
-        const response = await fetch('https://auth.davidnet.net/delete_sesion', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: token, session_id: id }),
-        });
-        return (await response.json()).email;
-    };
-
-    const email = await logout();
-    console.log("Logged out session from email:", email);
 }
