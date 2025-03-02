@@ -26,7 +26,16 @@ main {
 }
 
 #list {
-  display: flex;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  font-weight: bolder;
+}
+
+#recovery {
+  display: none;
   justify-content: center;
   align-items: center;
   flex-direction: column;
