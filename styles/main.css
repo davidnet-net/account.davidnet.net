@@ -100,6 +100,18 @@ button:active {
   transform: scale(0.95); /* Shrink the button on click */
 }
 
+.danger-btn {
+  background-color: #ff1e00b2;
+}
+
+.danger-btn:hover {
+  background-color: #ff1e007e;
+}
+
+.danger-btn:active {
+  background-color: #ff1e00;
+}
+
 form {
   display: flex;
   flex-direction: column;
