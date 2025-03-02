@@ -15,6 +15,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     const requestData = {
         username: username,
         password: password,
+        totp_token: "0"
     };
 
     try {
@@ -43,7 +44,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
             } else if (result.message == "give_totp") {
                 document.getElementById("loggingin").style.display = "none";
                 document.getElementById("totp").style.display = "flex";
-                
+
                 const inputs = document.querySelectorAll(".totp-box");
                 const targetString = "123456";
                 const successColor = "green";
