@@ -34,6 +34,14 @@ main {
   font-weight: bolder;
 }
 
+#totp {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+}
+
 .loader {
   width: 90px;
   height: 90px;
@@ -78,4 +86,28 @@ main {
   100% {
     transform: translate(-50%, -50%) scale(0);
   }
+}
+
+.totp-container {
+  display: flex;
+  gap: 8px;
+}
+
+.totp-box {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  text-align: center;
+  border: 2px solid #000000;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.totp-box:focus {
+  border-color: #ffffff2a;
+}
+
+.totp-container input {
+  text-transform: uppercase;
 }
