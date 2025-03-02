@@ -15,7 +15,7 @@ function promptChoice(closeText, confirmText, message, title) {
         const modalTitle = modal.querySelector(".modal-header h2");
         const modalMessage = modal.querySelector(".modal-content p");
         const closeButton = modal.querySelector("#modal-close");
-        const closeButton_x = modal.querySelector("#modal-close-x");
+        const closeButton_x = document.getElementById("modal-close-x");
         const confirmButton = modal.querySelector("#modal-confirm");
 
         modalTitle.textContent = title;
