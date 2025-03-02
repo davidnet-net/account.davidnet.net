@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>DN - EMAIL VERIFICATION</title>
+
+    <head>
+        <link rel="icon" href="h/favicon.png" type="image/png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="main.css">
+    </head>
+
+<body>
+    <main>
+        <div class="verified" id="verifying">
+            <h1>Verifying</h1>
+            <span class="loader"></span>
+            <h2>Please wait!</h2>
+        </div>
+        <div style="display: none;" class="verified" id="verified">
+            <h1 id="name">Verified</h1>
+            <img src="/icons/verified.svg" height="50%" width="50%">
+            <h2>You can close this tab now!</h2>
+        </div>
+        <div style="display: none;" class="verified" id="error">
+            <h1>Verified</h1>
+            <img src="/icons/error.svg" height="50%" width="50%">
+            <h2 id="response-message">Something wrent wrong!</h2>
+        </div>
+    </main>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
