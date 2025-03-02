@@ -66,8 +66,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const [email, creationDate] = await Promise.all([getEmail(), getCreatedAt()]);
 
+    // Format the account creation date
+    const formattedCreationDate = formatUTCDate(creationDate);
+
     document.getElementById("email").textContent = `Email: ${email}`;
-    document.getElementById("creationdate").textContent = `UTC Creation date: ${creationDate}`;
+    document.getElementById("creationdate").textContent = `UTC Creation date: ${formattedCreationDate}`;
 });
 
 // Function to handle the logout of a session
@@ -143,5 +146,3 @@ function display_session(session, sessioninfo) {
         console.warn("Log out button not found");
     }
 }
-
-
