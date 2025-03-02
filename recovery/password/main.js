@@ -15,9 +15,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 document.getElementById("recovery-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Clear previous errors
-    clearErrors();
-
     // Get form data
     const password = document.getElementById("password").value;
 
@@ -45,7 +42,12 @@ document.getElementById("recovery-form").addEventListener("submit", async (e) =>
             document.getElementById("success").style.display = "flex";
             localStorage.setItem("recovery-token", null);
         } else {
-            window.location = "/recovery/error/?err=Token expired! Or something wrent wrong."
+            if (result.error == "Invalid password") {
+                document.getElementById("password").classList.add("error-input");
+                document.getElementById("password-error").textContent = "Invalid password.";
+            } else {
+                window.location = "/recovery/error/?err=Missing token(s)"
+            }
         }
     } catch (error) {
         console.error(error);
