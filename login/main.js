@@ -1,108 +1,112 @@
-document.getElementById("login-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("login-form");
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        handleLogin();
+    });
+});
 
-    document.getElementById("login").style.display = "none";
-    document.getElementById("loggingin").style.display = "flex";
-
-    // Clear previous errors
+async function handleLogin(totpCode = "0") {
+    toggleVisibility("login", false);
+    toggleVisibility("loggingin", true);
     clearErrors();
 
-    // Get form data
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    // Prepare the data to send to the server
-    const requestData = {
-        username: username,
-        password: password,
-        totp_token: "0"
-    };
+    const requestData = getLoginData(totpCode);
 
     try {
-        // Make the POST request
-        const response = await fetch("https://auth.davidnet.net/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        });
+        const response = await sendLoginRequest(requestData);
         const result = await response.json();
-
-        // Show response message
-        const messageDiv = document.getElementById("response-message2");
-        if (response.ok) {
-            messageDiv.textContent = "Login successful!";
-            messageDiv.style.color = "green";
-
-            if (result.message == "verify_email") {
-                setTimeout(() => {
-                    window.location =
-                        "https://account.davidnet.net/links/verify_email?token=" +
-                        result.email_token;
-                }, 1500);
-            } else if (result.message == "give_totp") {
-                document.getElementById("loggingin").style.display = "none";
-                document.getElementById("totp").style.display = "flex";
-
-                const inputs = document.querySelectorAll(".totp-box");
-                const targetString = "123456";
-                const successColor = "green";
-
-                // Restrict input to numbers only
-                inputs.forEach(input => {
-                    input.addEventListener("input", (e) => {
-                        const value = e.target.value;
-                        if (!/^\d*$/.test(value)) {
-                            e.target.value = value.slice(0, -1);
-                        }
-                    });
-                });
-
-                inputs.forEach((input, index) => {
-                    input.addEventListener("input", () => {
-                        if (input.value && index < inputs.length - 1) {
-                            inputs[index + 1].focus();
-                        }
-
-                        // Check if all inputs are filled
-                        if (Array.from(inputs).every(input => input.value.length === 1)) {
-                            const enteredString = Array.from(inputs).map(input => input.value).join('');
-                            if (enteredString === targetString) {
-                                inputs.forEach(input => input.style.borderColor = successColor);
-                                alert("Success! TOTP is valid.");
-                            }
-                        }
-                    });
-
-                    input.addEventListener("keydown", (e) => {
-                        // Allow backspace to move focus backward
-                        if (e.key === "Backspace" && !input.value && index > 0) {
-                            inputs[index - 1].focus();
-                        }
-                    });
-                });
-            }
-            else {
-                localStorage.setItem("session-token", result.session_token);
-                console.log("Stored session_token: " + result.session_token);
-
-                setTimeout(() => {
-                    window.location = "https://account.davidnet.net/account";
-                }, 1500);
-            }
-        } else {
-            handleErrors(result.error);
-            document.getElementById("login").style.display = "block";
-            document.getElementById("loggingin").style.display = "none";
-        }
+        processLoginResponse(response.ok, result);
     } catch (error) {
         console.error(error);
-        const messageDiv = document.getElementById("response-message2");
-        messageDiv.textContent = "Network security violation!";
-        messageDiv.style.color = "red";
+        showMessage("Network security violation!", "red");
     }
-});
+}
+
+function getLoginData(totpCode) {
+    return {
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        totp_token: totpCode
+    };
+}
+
+async function sendLoginRequest(data) {
+    return fetch("https://auth.davidnet.net/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+}
+
+function processLoginResponse(success, result) {
+    if (success) {
+        showMessage("Login successful!", "green");
+
+        if (result.message === "verify_email") {
+            redirectWithDelay(`https://account.davidnet.net/links/verify_email?token=${result.email_token}`);
+        } else {
+            localStorage.setItem("session-token", result.session_token);
+            console.log("Stored session_token:", result.session_token);
+            redirectWithDelay("https://account.davidnet.net/account");
+        }
+    } else if (result.message === "give_totp") {
+        handleTOTP();
+    } else {
+        handleErrors(result.error);
+        toggleVisibility("login", true);
+        toggleVisibility("loggingin", false);
+    }
+}
+
+function handleTOTP() {
+    toggleVisibility("loggingin", false);
+    toggleVisibility("totp", true);
+
+    const inputs = document.querySelectorAll(".totp-box");
+    setupTOTPInput(inputs);
+}
+
+function setupTOTPInput(inputs) {
+    inputs.forEach((input, index) => {
+        input.addEventListener("input", () => {
+            input.value = input.value.replace(/\D/g, ""); // Alleen cijfers
+            if (input.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+
+            // Controleer of alle velden gevuld zijn
+            if (Array.from(inputs).every(input => input.value.length === 1)) {
+                const totpCode = Array.from(inputs).map(input => input.value).join('');
+                handleLogin(totpCode); // Opnieuw proberen met de TOTP-code
+            }
+        });
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !input.value && index > 0) {
+                inputs[index - 1].focus();
+            }
+        });
+    });
+}
+
+function toggleVisibility(elementId, isVisible) {
+    document.getElementById(elementId).style.display = isVisible ? "flex" : "none";
+}
+
+function showMessage(message, color) {
+    const messageDiv = document.getElementById("response-message2");
+    messageDiv.textContent = message;
+    messageDiv.style.color = color;
+}
+
+function redirectWithDelay(url, delay = 1500) {
+    setTimeout(() => {
+        window.location = url;
+    }, delay);
+}
+
+
 
 function handleErrors(error) {
     console.log("Handling error:", error); // Debugging error
