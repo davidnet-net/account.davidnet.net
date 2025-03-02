@@ -90,7 +90,6 @@ async function handleLogout(id) {
     }
 }
 
-// Function to display session details
 function display_session(session, sessioninfo) {
     const { id, ip, created_at } = session;
     const sessionDiv = document.getElementById("sessions");
@@ -110,14 +109,14 @@ function display_session(session, sessioninfo) {
         </div>
     `;
 
-    const newSessionDiv = document.createElement('div');
-    newSessionDiv.innerHTML = sessionHTML;
-    sessionDiv.appendChild(newSessionDiv);
+    sessionDiv.innerHTML += sessionHTML;
 
     // Check if the current session is the same as this one
+    const currentSession = document.querySelector(`#session-${id}`);
     if (id === sessioninfo.id) {
-        newSessionDiv.querySelector('.session').style.backgroundColor = '#e0f7e0';  // Light green background
-        newSessionDiv.querySelector('.session').style.border = '1px solid #4caf50';  // Green border
+        currentSession.style.backgroundColor = '#181a1b';  // Dark background
+        currentSession.style.border = '1px solid #4caf50';  // Green border
+        currentSession.querySelector('h3').innerText = "Your session"; // Update header text
     }
 
     const logoutButton = document.getElementById(`logout-btn-${id}`);
@@ -128,3 +127,4 @@ function display_session(session, sessioninfo) {
         console.warn("Log out button not found");
     }
 }
+
