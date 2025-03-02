@@ -5,14 +5,15 @@ main {
 }
 
 #background {
-  height: 92vh;
+  min-height: 92vh;
+  height: fit-content;
   width: 90vw;
   background-color: #1c1e1f;
   text-align: center;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   border-radius: 15px;
+  justify-content: space-evenly;
 }
 
 .lefttext {
