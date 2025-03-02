@@ -103,7 +103,7 @@ function clearErrors() {
     errorInputs.forEach(input => input.classList.remove('error-input'));
 }
 
-import { is_session_valid, get_session_information } from './session.js';
+import { is_session_valid, get_session_information } from '/session.js';
 document.addEventListener("DOMContentLoaded", async () => {
     const valid = await is_session_valid();
     if (valid === true) {

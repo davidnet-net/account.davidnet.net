@@ -95,7 +95,7 @@ function clearErrors() {
 
 
 
-import { is_session_valid, get_session_information } from './session.js';
+import { is_session_valid, get_session_information } from '/session.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const valid = await is_session_valid();
