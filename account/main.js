@@ -2,18 +2,19 @@ import { is_session_valid, get_session_information, get_session_token } from '/s
 
 // Define the handleLogout function globally
 async function handleLogout(id) {
-    const logout = async () => {
-        const token = await get_session_token();
-        const response = await fetch('https://auth.davidnet.net/delete_sesion', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: token, session_id: id }),
-        });
-        return (await response.json()).email;
-    };
+    const token = await get_session_token();
+    const response = await fetch('https://auth.davidnet.net/delete_sesion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token, session_id: id }),
+    });
 
-    const email = await logout();
-    console.log("Logged out session from email:", email);
+    if (response.ok) {
+        console.log("Logged out!")
+    } else {
+        const result = response.json();
+        console.error(result.error);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -41,13 +42,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         return (await response.json()).sessions;
     };
-    
+
     const sessions = await get_sessions();
     sessions.forEach(session => {
         display_session(session.id, session.ip, session.created_at);
     });
     console.log("Sessions:", await get_sessions());
-    
+
 
     const getEmail = async () => {
         const response = await fetch('https://auth.davidnet.net/get_email', {
