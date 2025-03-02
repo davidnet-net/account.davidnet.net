@@ -90,6 +90,20 @@ async function handleLogout(id) {
     }
 }
 
+function formatUTCDate(utcDate) {
+    const date = new Date(utcDate);  // Parse the UTC string into a Date object
+    return date.toLocaleString('en-US', {
+        weekday: 'long',  // Full day name (e.g., Monday)
+        year: 'numeric',  // Year (e.g., 2025)
+        month: 'long',  // Full month name (e.g., March)
+        day: 'numeric',  // Day of the month (e.g., 2)
+        hour: '2-digit',  // Hour in 12-hour format
+        minute: '2-digit',  // Minute
+        second: '2-digit',  // Second
+        timeZoneName: 'short'  // Time zone (e.g., UTC)
+    });
+}
+
 function display_session(session, sessioninfo) {
     const { id, ip, created_at } = session;
     const sessionDiv = document.getElementById("sessions");
@@ -99,11 +113,13 @@ function display_session(session, sessioninfo) {
         return;
     }
 
+    const formattedDate = formatUTCDate(created_at);  // Get the formatted date
+
     const sessionHTML = `
         <div class="session" id="session-${id}">
             <h3>${id}</h3>
             <p class="lefttext"><strong>IP:</strong><br>${ip}</p>
-            <p class="lefttext"><strong>UTC Creationdate:</strong><br>${created_at}</p>
+            <p class="lefttext"><strong>UTC Creationdate:</strong><br>${formattedDate}</p>
             <button class="logout-btn" id="logout-btn-${id}">Log out</button>
             <p></p>
         </div>
@@ -127,4 +143,5 @@ function display_session(session, sessioninfo) {
         console.warn("Log out button not found");
     }
 }
+
 
