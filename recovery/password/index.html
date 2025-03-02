@@ -20,23 +20,22 @@
         <a href="/signup/">Sign-up</a>
     </nav>
     <main>
-        <div class="recover" id="resetpassword">
+        <div class="recover" id="pass-recovery">
             <h1>Reset password</h1>
-            <form id="resetpassword-form">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required><br>
-                <div id="email-error" class="error"></div><br>
+            <form id="pass-recovery-form">
+                <label for="password">New password:</label>
+                <input type="password" id="password" name="password" required><br>
+                <div id="password-error" class="error"></div><br>
 
-                <button type="submit">Start password recovery</button>
+                <button type="submit">Recover password</button>
             </form>
             <br>
-            <a href="/recovery/">Back</a>
         </div>
-        <div class="recover" id="waitforverify">
-            <h1>Verify your request</h1>
-            <span class="loader"></span>
-            <div id="response-message"></div>
-            <p>Please verify your request<br>by clicking the link sent to your inbox.</p>
+        <div style="display: none; flex-direction: column; justify-content: center; align-items: center;" class="recover" id="success">
+            <h1 id="name">Recovery successfull!</h1>
+            <img src="/icons/verified.svg" height="50%" width="50%">
+            <h3>Your password has been changed!</h3>
+            <a href="https://account.davidnet.net/login">Back to login</a>
         </div>
     </main>
     <script type="module" src="main.js"></script>

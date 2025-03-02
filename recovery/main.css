@@ -34,7 +34,7 @@ main {
   font-weight: bolder;
 }
 
-#resetpassword {
+#pass-recovery {
   display: flex;
   justify-content: center;
   align-items: center;
