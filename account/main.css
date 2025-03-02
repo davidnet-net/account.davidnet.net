@@ -5,8 +5,8 @@ main {
 }
 
 #background {
-  height: 92vw;
-  width: 90vh;
+  height: 92vh;
+  width: 90vw;
   background-color: #1c1e1f;
   text-align: center;
   display: flex;
