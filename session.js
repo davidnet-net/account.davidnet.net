@@ -49,6 +49,7 @@ export async function get_session_information(params) {
       userid: userid,
       ip: ip,
       created_at,
+      useragent, useragent
     };
 
     return session_info;
