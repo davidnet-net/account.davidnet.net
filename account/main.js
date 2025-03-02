@@ -129,7 +129,12 @@ async function updateUserInfo() {
     try {
         const sessionToken = await get_session_token();
         
-        const [emailResponse, creationDateResponse] = await Promise.all([
+        const [usernameResponse, emailResponse, creationDateResponse] = await Promise.all([
+            fetch('https://auth.davidnet.net/get_username', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: sessionToken })
+            }),
             fetch('https://auth.davidnet.net/get_email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -142,9 +147,11 @@ async function updateUserInfo() {
             })
         ]);
 
+        const username = (await usernameResponse.json()).username;
         const email = (await emailResponse.json()).email;
         const creationDate = (await creationDateResponse.json()).created_at;
 
+        document.getElementById("hello").textContent = `Hello, ${username}`
         document.getElementById("email").textContent = `Email: ${email}`;
         document.getElementById("creationdate").textContent = `UTC Creation date: ${formatUTCDate(creationDate)}`;
     } catch (error) {
