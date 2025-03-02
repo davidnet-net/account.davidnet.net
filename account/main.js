@@ -1,30 +1,17 @@
-import { is_session_valid, get_session_information, get_session_token } from '/session.js';
-
-// Define the handleLogout function globally
-async function handleLogout(id) {
-    const token = await get_session_token();
-    console.log("Logging out id: " + id + "  with our token: " + token)
-
-    const response = await fetch('https://auth.davidnet.net/delete_session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: token, session_id: id }),
-    });
-
-    if (response.ok) {
-        console.log("Logged out!");
+// Create a function to load and display sessions
+async function loadSessions() {
+    // Clear the sessions div
+    const sessionDiv = document.getElementById("sessions");
+    if (sessionDiv) {
+        sessionDiv.innerHTML = '';  // Clear the existing content
     } else {
-        const result = await response.json();  // Voeg 'await' toe om de response correct te verwerken
-        console.error(result.error);
+        console.error("Element with ID 'sessions' not found.");
     }
-}
 
-
-document.addEventListener("DOMContentLoaded", async () => {
     const valid = await is_session_valid();
     if (!valid) {
         window.location.href = "https://account.davidnet.net/login/";
-        return; // Stop de code hier als de sessie ongeldig is
+        return; // Stop if session is invalid
     }
 
     const session_token = await get_session_token();
@@ -50,14 +37,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     sessions.forEach(session => {
         display_session(session.id, session.ip, session.created_at);
     });
-    console.log("Sessions:", await get_sessions());
+    console.log("Sessions:", sessions);
+}
 
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSessions();  // Load the sessions when the DOM is ready
 
     const getEmail = async () => {
         const response = await fetch('https://auth.davidnet.net/get_email', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestData),
+            body: JSON.stringify({ token: await get_session_token() }),
         });
         return (await response.json()).email;
     };
@@ -66,19 +56,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch('https://auth.davidnet.net/get_created_at', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestData),
+            body: JSON.stringify({ token: await get_session_token() }),
         });
         return (await response.json()).created_at;
     };
 
-    // Wacht op beide requests tegelijkertijd
     const [email, creationDate] = await Promise.all([getEmail(), getCreatedAt()]);
 
     document.getElementById("email").textContent = `Email: ${email}`;
     document.getElementById("creationdate").textContent = `UTC Creation date: ${creationDate}`;
 });
 
+// Function to handle the logout of a session
+async function handleLogout(id) {
+    const token = await get_session_token();
+    console.log("Logging out id: " + id + "  with our token: " + token);
 
+    const response = await fetch('https://auth.davidnet.net/delete_session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token, session_id: id }),
+    });
+
+    if (response.ok) {
+        console.log("Logged out!");
+        await loadSessions();  // Reload the sessions after logging out
+    } else {
+        const result = await response.json();
+        console.error(result.error);
+    }
+}
+
+// Function to display session details
 function display_session(id, ip, creationdate) {
     const sessionDiv = document.getElementById("sessions");
 
@@ -97,12 +106,10 @@ function display_session(id, ip, creationdate) {
         </div>
     `;
 
-    // Append the new session HTML without overwriting the entire container
     const newSessionDiv = document.createElement('div');
     newSessionDiv.innerHTML = sessionHTML;
     sessionDiv.appendChild(newSessionDiv);
 
-    // Attach the logout button event listener after the session has been added to the DOM
     const logoutButton = document.getElementById(`logout-btn-${id}`);
     if (logoutButton) {
         logoutButton.addEventListener('click', () => handleLogout(id));
