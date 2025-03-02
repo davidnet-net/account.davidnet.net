@@ -43,13 +43,14 @@ export async function get_session_information(params) {
     const userid = result.userid;
     const ip = result.ip;
     const created_at = result.created_at;
-    console.log(result);
+    const useragent = result.useragent;
 
     const session_info = {
       id: id,
       userid: userid,
       ip: ip,
       created_at,
+      useragent
     };
 
     return session_info;
