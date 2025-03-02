@@ -1,7 +1,5 @@
-import { get_session_information, is_session_valid } from "/session.js";
-
 document.addEventListener("DOMContentLoaded", async () => {
-    if (await is_session_valid()) {
+    if (await isSessionValid()) {
         redirectToAccount();
     }
 
@@ -61,7 +59,8 @@ function handleSuccessfulLogin(result, requestData) {
 }
 
 function showTotpInput(requestData) {
-    toggleLoginState(false);
+    document.getElementById("login").style.display = "none";
+    document.getElementById("loggingin").style.display = "none";
     document.getElementById("totp").style.display = "flex";
 
     const inputs = document.querySelectorAll(".totp-box");
@@ -116,7 +115,7 @@ function redirectTo(url) {
 }
 
 function redirectToAccount() {
-    redirectTo("https://account.davidnet.net/account");
+    window.location.href = "https://account.davidnet.net/account";
 }
 
 function inputsToTotpString(inputs) {
