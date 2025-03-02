@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadSessions();
   await updateUserInfo();
 
-  document.getElementById("delete-account-btn")
+  document.getElementById("delete-account-btn").addEventListener("click", delete_account);
 });
 
 async function delete_account() {
