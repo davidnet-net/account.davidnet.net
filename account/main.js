@@ -84,14 +84,20 @@ function display_session(id, ip, creationdate) {
     }
 
     const sessionHTML = `
-        <div class="session">
+        <div class="session" id="session-${id}">
             <h3>${id}</h3>
             <p class="lefttext"><strong>IP:</strong><br>${ip}</p>
             <p class="lefttext"><strong>UTC Creationdate:</strong><br>${creationdate}</p>
-            <button onclick="handleLogout('${id}')">Log out</button>
+            <button id="logout-btn-${id}">Log out</button>
             <p></p>
         </div>
     `;
 
     sessionDiv.innerHTML += sessionHTML;
+
+    // Bind the logout button to the handleLogout function
+    const logoutButton = document.getElementById(`logout-btn-${id}`);
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => handleLogout(id));
+    }
 }
