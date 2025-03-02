@@ -68,7 +68,7 @@ function display_session(id, ip, creationdate) {
     }
 
     const sessionHTML = `
-        <div>
+        <div class="session">
             <h3>${id}</h3>
             <p class="lefttext"><strong>IP:</strong><br>${ip}</p>
             <p class="lefttext"><strong>UTC Creationdate:</strong><br>${creationdate}</p>
