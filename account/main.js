@@ -172,3 +172,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadSessions();
   await updateUserInfo();
 });
+
+function openModal() {
+  document.getElementById("myModal").classList.add("active");
+}
+
+function closeModal() {
+  document.getElementById("myModal").classList.remove("active");
+}
+
+function confirmAction() {
+  alert("Action confirmed!");
+  closeModal();
+}

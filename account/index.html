@@ -35,6 +35,21 @@
             </div>
         </div>
     </main>
+    <div id="myModal" class="modal">
+        <div class="modal-header">
+          <h2>Modal Title</h2>
+          <span class="modal-close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-content">
+          <p>This is a sample modal. You can put any content here.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="danger-btn" onclick="closeModal()">Close</button>
+          <button onclick="confirmAction()">Confirm</button>
+        </div>
+      </div>
+      
+      <button onclick="openModal()">Open Modal</button>      
     <script type="module" src="main.js"></script>
 </body>
 
