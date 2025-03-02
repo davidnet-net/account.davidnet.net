@@ -14,8 +14,10 @@ export async function is_session_valid() {
     });
 
     if (response.ok) {
+        console.log("Session valid!");
         return true
     } else {
+        console.log("Session invalid");
         return false
     }
 }
