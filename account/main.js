@@ -1,3 +1,5 @@
+import { is_session_valid, get_session_information, get_session_token } from '/session.js';
+
 // Create a function to load and display sessions
 async function loadSessions() {
     // Clear the sessions div
@@ -40,6 +42,7 @@ async function loadSessions() {
     console.log("Sessions:", sessions);
 }
 
+// Load sessions when the DOM is ready
 document.addEventListener("DOMContentLoaded", async () => {
     await loadSessions();  // Load the sessions when the DOM is ready
 
