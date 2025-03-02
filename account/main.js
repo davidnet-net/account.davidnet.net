@@ -238,7 +238,7 @@ async function delete_account() {
 
       if (response.ok) {
         const token = result.delete_token;
-        window.location = "https://account.davidnet.net/delete?token=" + token;
+          window.location = "https://account.davidnet.net/links/delete_account?token=" + token;
       } else {
         
         console.error("delete token collection failed:", result.error);
