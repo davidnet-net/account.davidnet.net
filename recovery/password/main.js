@@ -54,7 +54,8 @@ document.getElementById("resetpassword-form").addEventListener("submit", async (
                             console.log("Recovery verified!");
                             clearInterval(interval);
 
-                            console.log("RECOVERY TOKEN: " + result.recovery_token);
+                            const recovery_token = result.token;
+                            console.log("RECOVERY TOKEN: " + recovery_token);
                         }
                     } else {
                         console.error("Empty response body");
