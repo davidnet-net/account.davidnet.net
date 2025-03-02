@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result = await response.json();
         return result.sessions
     };
-    console.log(get_sessions());
+    console.log(await get_sessions());
 
     // Make the POST request to get the email
     const getEmail = async () => {
