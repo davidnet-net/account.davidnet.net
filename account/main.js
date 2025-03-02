@@ -5,7 +5,7 @@ async function loadSessions() {
     // Clear the sessions div
     const sessionDiv = document.getElementById("sessions");
     if (sessionDiv) {
-        sessionDiv.innerHTML = '';  // Clear the existing content
+        sessionDiv.innerHTML = '<h2>Sessions:</h2>';  // Clear the existing content
     } else {
         console.error("Element with ID 'sessions' not found.");
     }
