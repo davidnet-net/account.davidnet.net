@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>DN - Account deletion</title>
+
+    <head>
+        <link rel="icon" href="h/favicon.png" type="image/png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="main.css">
+    </head>
+
+<body>
+    <main>
+        <div style="display: flex;" class="delete" id="deleting">
+            <h1>Deleting</h1>
+            <span class="loader"></span>
+            <h2>Please wait!</h2>
+        </div>
+        <div style="display: none;" class="delete" id="deleted">
+            <h1 id="name">Account deleted!</h1>
+            <img src="/icons/verified.svg" height="50%" width="50%">
+            <h2>You can now leave davidnet );</h2>
+        </div>
+        <div style="display: none;" class="delete" id="error">
+            <h1>Account not deleted!</h1>
+            <img src="/icons/error.svg" height="50%" width="50%">
+            <h2 id="response-message">Something wrent wrong!</h2>
+            <p>Mail to <a href="mailto://contact@davidnet.net">contact@davidnet.net</a> for manual deletion!</p>
+        </div>
+    </main>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
