@@ -40,7 +40,6 @@ main {
   align-items: center;
   flex-direction: column;
   gap: 15px;
-  font-weight: bolder;
 }
 
 #pass-recovery {
