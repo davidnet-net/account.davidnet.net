@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const ip = sessioninfo.ip;
     const created_at = sessioninfo.created_at;
 
-    display_session()
+    //display_session()
     const requestData = {
         token: get_session_token(),
     };
@@ -76,6 +76,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function display_session(id, ip, creationdate) {
+    const sessionDiv = document.getElementById(sessions);
+
     // Create the content for session div
     sessionDiv.innerHTML = `
         <h3>${id}</h3>
