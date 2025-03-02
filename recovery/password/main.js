@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-document.getElementById("recovery-form").addEventListener("submit", async (e) => {
+document.getElementById("pass-recovery-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     // Get form data
