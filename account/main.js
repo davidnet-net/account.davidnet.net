@@ -97,9 +97,12 @@ function display_session(id, ip, creationdate) {
         </div>
     `;
 
-    sessionDiv.innerHTML += sessionHTML;
+    // Append the new session HTML without overwriting the entire container
+    const newSessionDiv = document.createElement('div');
+    newSessionDiv.innerHTML = sessionHTML;
+    sessionDiv.appendChild(newSessionDiv);
 
-    // Attach the logout button event listener inside the loop to each button
+    // Attach the logout button event listener after the session has been added to the DOM
     const logoutButton = document.getElementById(`logout-btn-${id}`);
     if (logoutButton) {
         logoutButton.addEventListener('click', () => handleLogout(id));
