@@ -1,113 +1,45 @@
 import { is_session_valid, get_session_information, get_session_token } from '/session.js';
 
-// Create a function to load and display sessions
-async function loadSessions() {
-    // Clear the sessions div
-    const sessionDiv = document.getElementById("sessions");
-    if (sessionDiv) {
-        sessionDiv.innerHTML = '<h2>Sessions:</h2>';  // Clear the existing content
-    } else {
-        console.error("Element with ID 'sessions' not found.");
-    }
+// Utility function to format UTC dates
+function formatUTCDate(utcDate) {
+    const date = new Date(utcDate);
+    return date.toLocaleString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZoneName: 'short'
+    });
+}
 
-    const valid = await is_session_valid();
-    if (!valid) {
-        window.location.href = "https://account.davidnet.net/login/";
-        return; // Stop if session is invalid
-    }
+// Fetches session information
+async function fetchSessionData() {
+    const sessionToken = await get_session_token();
+    const sessionInfo = await get_session_information();
+    return { sessionToken, sessionInfo };
+}
 
-    const session_token = await get_session_token();
-    console.log("session_token:", session_token);
-
-    const sessioninfo = await get_session_information();
-    console.log("Session info:", sessioninfo);
-
-    const { id, userid, ip, created_at } = sessioninfo;
-
-    const requestData = { token: session_token };
-
-    const get_sessions = async () => {
+// Fetch all sessions for a user
+async function getSessions(sessionToken, userid) {
+    try {
         const response = await fetch('https://auth.davidnet.net/get_sessions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: session_token, userid })
+            body: JSON.stringify({ token: sessionToken, userid })
         });
-        return (await response.json()).sessions;
-    };
-
-    const sessions = await get_sessions();
-    sessions.forEach(session => {
-        display_session(session, sessioninfo);  // Pass session and sessioninfo to display_session
-    });
-    console.log("Sessions:", sessions);
-}
-
-// Load sessions when the DOM is ready
-document.addEventListener("DOMContentLoaded", async () => {
-    await loadSessions();  // Load the sessions when the DOM is ready
-
-    const getEmail = async () => {
-        const response = await fetch('https://auth.davidnet.net/get_email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: await get_session_token() }),
-        });
-        return (await response.json()).email;
-    };
-
-    const getCreatedAt = async () => {
-        const response = await fetch('https://auth.davidnet.net/get_created_at', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: await get_session_token() }),
-        });
-        return (await response.json()).created_at;
-    };
-
-    const [email, creationDate] = await Promise.all([getEmail(), getCreatedAt()]);
-
-    // Format the account creation date
-    const formattedCreationDate = formatUTCDate(creationDate);
-
-    document.getElementById("email").textContent = `Email: ${email}`;
-    document.getElementById("creationdate").textContent = `UTC Creation date: ${formattedCreationDate}`;
-});
-
-// Function to handle the logout of a session
-async function handleLogout(id) {
-    const token = await get_session_token();
-    console.log("Logging out id: " + id + "  with our token: " + token);
-
-    const response = await fetch('https://auth.davidnet.net/delete_session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: token, session_id: id }),
-    });
-
-    if (response.ok) {
-        console.log("Logged out!");
-        await loadSessions();  // Reload the sessions after logging out
-    } else {
-        const result = await response.json();
-        console.error(result.error);
+        const data = await response.json();
+        return data.sessions || [];
+    } catch (error) {
+        console.error("Failed to fetch sessions:", error);
+        return [];
     }
 }
 
-function formatUTCDate(utcDate) {
-    const date = new Date(utcDate);  // Parse the UTC string into a Date object
-    return date.toLocaleString('en-US', {
-        weekday: 'long',  // Full day name (e.g., Monday)
-        year: 'numeric',  // Year (e.g., 2025)
-        month: 'long',  // Full month name (e.g., March)
-        day: 'numeric',  // Day of the month (e.g., 2)
-        hour: '2-digit',  // Hour in 12-hour format
-        minute: '2-digit',  // Minute
-        second: '2-digit',  // Second
-        timeZoneName: 'short'  // Time zone (e.g., UTC)
-    });
-}
-
-function display_session(session, sessioninfo) {
+// Display session information on the page
+function displaySession(session, sessionInfo) {
     const { id, ip, created_at } = session;
     const sessionDiv = document.getElementById("sessions");
 
@@ -116,7 +48,7 @@ function display_session(session, sessioninfo) {
         return;
     }
 
-    const formattedDate = formatUTCDate(created_at);  // Get the formatted date
+    const formattedDate = formatUTCDate(created_at);
 
     const sessionHTML = `
         <div class="session" id="session-${id}">
@@ -124,25 +56,104 @@ function display_session(session, sessioninfo) {
             <p class="lefttext"><strong>IP:</strong><br>${ip}</p>
             <p class="lefttext"><strong>UTC Creationdate:</strong><br>${formattedDate}</p>
             <button class="logout-btn" id="logout-btn-${id}">Log out</button>
-            <p></p>
         </div>
     `;
+    sessionDiv.insertAdjacentHTML('beforeend', sessionHTML);
 
-    sessionDiv.innerHTML += sessionHTML;
-
-    // Check if the current session is the same as this one
+    // Highlight current session
     const currentSession = document.querySelector(`#session-${id}`);
-    if (id === sessioninfo.id) {
-        currentSession.style.backgroundColor = '#181a1b';  // Dark background
-        currentSession.style.border = '1px solid #4caf50';  // Green border
-        currentSession.querySelector('h3').innerText = "Your session"; // Update header text
+    if (id === sessionInfo.id) {
+        currentSession.style.backgroundColor = '#181a1b';
+        currentSession.style.border = '1px solid #4caf50';
+        currentSession.querySelector('h3').innerText = "Your session";
     }
 
+    // Add logout button event listener
     const logoutButton = document.getElementById(`logout-btn-${id}`);
     if (logoutButton) {
         logoutButton.addEventListener('click', () => handleLogout(id));
-        console.log("Connected logout button: " + `logout-btn-${id}`);
     } else {
-        console.warn("Log out button not found");
+        console.warn("Logout button not found for session", id);
     }
 }
+
+// Handle session logout
+async function handleLogout(id) {
+    try {
+        const token = await get_session_token();
+        const response = await fetch('https://auth.davidnet.net/delete_session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, session_id: id })
+        });
+
+        if (response.ok) {
+            console.log("Logged out successfully!");
+            loadSessions();  // Reload sessions after logout
+        } else {
+            const result = await response.json();
+            console.error("Logout failed:", result.error);
+        }
+    } catch (error) {
+        console.error("Error during logout:", error);
+    }
+}
+
+// Load sessions and display them
+async function loadSessions() {
+    const sessionDiv = document.getElementById("sessions");
+    if (!sessionDiv) {
+        console.error("Element with ID 'sessions' not found.");
+        return;
+    }
+
+    sessionDiv.innerHTML = '<h2>Sessions:</h2>';
+
+    // Check if session is valid
+    const valid = await is_session_valid();
+    if (!valid) {
+        window.location.href = "https://account.davidnet.net/login/";
+        return;
+    }
+
+    const { sessionToken, sessionInfo } = await fetchSessionData();
+    const sessions = await getSessions(sessionToken, sessionInfo.userid);
+
+    sessions.forEach(session => {
+        displaySession(session, sessionInfo);  // Display each session
+    });
+}
+
+// Update user info (email and creation date)
+async function updateUserInfo() {
+    try {
+        const sessionToken = await get_session_token();
+        
+        const [emailResponse, creationDateResponse] = await Promise.all([
+            fetch('https://auth.davidnet.net/get_email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: sessionToken })
+            }),
+            fetch('https://auth.davidnet.net/get_created_at', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: sessionToken })
+            })
+        ]);
+
+        const email = (await emailResponse.json()).email;
+        const creationDate = (await creationDateResponse.json()).created_at;
+
+        document.getElementById("email").textContent = `Email: ${email}`;
+        document.getElementById("creationdate").textContent = `UTC Creation date: ${formatUTCDate(creationDate)}`;
+    } catch (error) {
+        console.error("Failed to fetch user info:", error);
+    }
+}
+
+// Initialize sessions and user info after DOM is loaded
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSessions();
+    await updateUserInfo();
+});
