@@ -116,7 +116,7 @@ function redirectTo(url) {
 }
 
 function redirectToAccount() {
-    window.location.href = "https://account.davidnet.net/account";
+    //window.location.href = "https://account.davidnet.net/account";
 }
 
 function inputsToTotpString(inputs) {
