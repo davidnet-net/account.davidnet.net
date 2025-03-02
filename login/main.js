@@ -16,7 +16,7 @@ async function handleLogin(totpCode = "0") {
     try {
         const response = await sendLoginRequest(requestData);
         const result = await response.json();
-        processLoginResponse(response.ok, result);
+        await processLoginResponse(response.ok, result);
     } catch (error) {
         console.error(error);
         showMessage("Network security violation!", "red");
@@ -27,7 +27,7 @@ function getLoginData(totpCode) {
     return {
         username: document.getElementById("username").value,
         password: document.getElementById("password").value,
-        totp_token: totpCode
+        totp_token: totpCode,
     };
 }
 
@@ -39,9 +39,9 @@ async function sendLoginRequest(data) {
     });
 }
 
-function processLoginResponse(success, result) {
+async function processLoginResponse(success, result) {
     if (success) {
-        // No TOTP required or TOTP verified
+        // If the response indicates a successful login or TOTP is already verified
         if (result.message !== "give_totp") {
             showMessage("Login successful!", "green");
             localStorage.setItem("session-token", result.session_token);
@@ -49,35 +49,36 @@ function processLoginResponse(success, result) {
             redirectWithDelay("https://account.davidnet.net/account");
         }
     } else if (result.message === "give_totp") {
-        // TOTP required, show TOTP input
-        handleTOTP();
+        // TOTP is required, show TOTP input screen
+        handleTOTP(result);
     } else {
+        // Handle other errors such as invalid credentials
         handleErrors(result.error);
         toggleVisibility("login", true);
         toggleVisibility("loggingin", false);
     }
 }
 
-function handleTOTP() {
+function handleTOTP(result) {
     toggleVisibility("loggingin", false);
     toggleVisibility("totp", true);
 
     const inputs = document.querySelectorAll(".totp-box");
-    setupTOTPInput(inputs);
+    setupTOTPInput(inputs, result);
 }
 
-function setupTOTPInput(inputs) {
+function setupTOTPInput(inputs, result) {
     inputs.forEach((input, index) => {
         input.addEventListener("input", () => {
-            input.value = input.value.replace(/\D/g, ""); // Alleen cijfers
+            input.value = input.value.replace(/\D/g, ""); // Only allow digits
             if (input.value && index < inputs.length - 1) {
                 inputs[index + 1].focus();
             }
 
-            // Controleer of alle velden gevuld zijn
+            // When all inputs are filled, try to login again
             if (Array.from(inputs).every(input => input.value.length === 1)) {
                 const totpCode = Array.from(inputs).map(input => input.value).join('');
-                handleLogin(totpCode); // Opnieuw proberen met de TOTP-code
+                handleLogin(totpCode); // Retry login with the entered TOTP code
             }
         });
 
@@ -104,9 +105,6 @@ function redirectWithDelay(url, delay = 1500) {
         window.location = url;
     }, delay);
 }
-
-
-
 
 function handleErrors(error) {
     console.log("Handling error:", error); // Debugging error
