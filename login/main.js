@@ -15,7 +15,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     const requestData = {
       username: username,
       password: password,
-      totp_code: "0", // Default TOTP code
+      totp_token: "0", // Default TOTP code
     };
   
     try {
@@ -44,9 +44,9 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
               "https://account.davidnet.net/links/verify_email?token=" +
               result.email_token;
           }, 1500);
-        } else if (result.message === "totp_required") {
+        } else if (result.message === "give_totp") {
           // If TOTP is required, show the TOTP input form
-          showTOTPInput(result.totp_token);
+          showTOTPInput(result.session_token);
         } else {
           // If session token is returned, store it and redirect to the account page
           localStorage.setItem("session-token", result.session_token);
@@ -70,7 +70,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   });
   
   // Show TOTP input form after login request if TOTP is required
-  function showTOTPInput(totp_token) {
+  function showTOTPInput(session_token) {
     // Hide the login form and show the TOTP input form
     document.getElementById("login").style.display = "none";
     document.getElementById("totp-container").style.display = "block";
@@ -80,7 +80,6 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
       e.preventDefault();
   
       const totpCode = document.getElementById("totp-code").value;
-      
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
   
@@ -94,7 +93,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
           body: JSON.stringify({
             username: username,
             password: password,
-            totp_code: totpCode, // TOTP code entered by the user
+            totp_token: totpCode, // TOTP code entered by the user
           }),
         });
   
@@ -137,17 +136,6 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     } else if (error.includes("Invalid TOTP code")) {
       document.getElementById("totp-code").classList.add("error-input");
       document.getElementById("totp-error").textContent = "Invalid TOTP code.";
-    } else if (error.includes("Missing fields")) {
-      if (!document.getElementById("username").value) {
-        document.getElementById("username").classList.add("error-input");
-        document.getElementById("username-error").textContent =
-          "Username is required.";
-      }
-      if (!document.getElementById("password").value) {
-        document.getElementById("password").classList.add("error-input");
-        document.getElementById("password-error").textContent =
-          "Password is required.";
-      }
     } else {
       const messageDiv = document.getElementById("response-message");
       messageDiv.textContent = "Something went wrong. Please try again later.";
@@ -162,14 +150,4 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     const errorInputs = document.querySelectorAll(".error-input");
     errorInputs.forEach((input) => input.classList.remove("error-input"));
   }
-  
-  // Redirect if session is already valid
-  import { get_session_information, is_session_valid } from "/session.js";
-  
-  document.addEventListener("DOMContentLoaded", async () => {
-    const valid = await is_session_valid();
-    if (valid === true) {
-      window.location.href = "https://account.davidnet.net/account/";
-    }
-  });
   
