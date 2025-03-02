@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("creationdate").textContent = `UTC Creation date: ${creationDate}`;
 });
 
-// Correcte versie van display_session()
+
 function display_session(id, ip, creationdate) {
     const sessionDiv = document.getElementById("sessions");
 
@@ -92,19 +92,19 @@ function display_session(id, ip, creationdate) {
             <h3>${id}</h3>
             <p class="lefttext"><strong>IP:</strong><br>${ip}</p>
             <p class="lefttext"><strong>UTC Creationdate:</strong><br>${creationdate}</p>
-            <button id="logout-btn-${id}">Log out</button>
+            <button class="logout-btn" id="logout-btn-${id}">Log out</button>
             <p></p>
         </div>
     `;
 
     sessionDiv.innerHTML += sessionHTML;
 
-    // Bind the logout button to the handleLogout function
+    // Attach the logout button event listener inside the loop to each button
     const logoutButton = document.getElementById(`logout-btn-${id}`);
     if (logoutButton) {
         logoutButton.addEventListener('click', () => handleLogout(id));
-        console.log("Connected logout button:   " + `logout-btn-${id}`)
+        console.log("Connected logout button: " + `logout-btn-${id}`);
     } else {
-        console.warn("Log out button not found")
+        console.warn("Log out button not found");
     }
 }
