@@ -79,3 +79,15 @@ function display_session(id, ip, creationdate) {
 
     sessionDiv.innerHTML += sessionHTML;
 }
+
+async function handleLogout(id) {
+    const logout = async () => {
+        const token = await get_session_token();
+        const response = await fetch('https://auth.davidnet.net/delete_sesion', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: token, session_id: id }),
+        });
+        return (await response.json()).email;
+    };
+}
