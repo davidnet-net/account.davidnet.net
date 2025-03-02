@@ -4,6 +4,51 @@ import {
   is_session_valid,
 } from "/session.js";
 
+let isModalOpen = false;
+
+function promptChoice(closeText, confirmText, message, title) {
+    if (isModalOpen) return false;
+    isModalOpen = true;
+
+    return new Promise((resolve) => {
+        const modal = document.getElementById("myModal");
+        const modalTitle = modal.querySelector(".modal-header h2");
+        const modalMessage = modal.querySelector(".modal-content p");
+        const closeButton = modal.querySelector("#modal-close");
+        const confirmButton = modal.querySelector("#modal-confirm");
+
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        closeButton.textContent = closeText;
+        confirmButton.textContent = confirmText;
+
+        modal.classList.add("active");
+
+        function closeModal(result) {
+            modal.classList.remove("active");
+            isModalOpen = false;
+            resolve(result);
+            removeEventListeners();
+        }
+
+        function removeEventListeners() {
+            closeButton.removeEventListener("click", onClose);
+            confirmButton.removeEventListener("click", onConfirm);
+        }
+
+        function onClose() {
+            closeModal(false);
+        }
+
+        function onConfirm() {
+            closeModal(true);
+        }
+
+        closeButton.addEventListener("click", onClose);
+        confirmButton.addEventListener("click", onConfirm);
+    });
+}
+
 // Utility function to format UTC dates
 function formatUTCDate(utcDate) {
   const date = new Date(utcDate);
@@ -171,18 +216,35 @@ async function updateUserInfo() {
 document.addEventListener("DOMContentLoaded", async () => {
   await loadSessions();
   await updateUserInfo();
-  document.getElementById("modal-btn-open").addEventListener("click", openModal);
+
+  document.getElementById("delete-account-btn")
 });
 
-function openModal() {
-  document.getElementById("myModal").classList.add("active");
+async function delete_account() {
+  const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete your account and usercontent?", "Account deletion confirmation!");
+  if (result) {
+    const session_token = await get_session_token();
+    try {
+      const response = await fetch("https://auth.davidnet.net/get_delete_token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: session_token }),
+      });
+  
+      const result = await response.json();
+
+      if (response.ok) {
+        const token = result.delete_token;
+        window.location = "https://account.davidnet.net/delete?token=" + token;
+      } else {
+        
+        console.error("delete token collection failed:", result.error);
+      }
+    } catch (error) {
+      console.error("Error during delete token collection:", error);
+    }
+  } else {
+    console.log("Stopped user deletion");
+  }
 }
 
-function closeModal() {
-  document.getElementById("myModal").classList.remove("active");
-}
-
-function confirmAction() {
-  alert("Action confirmed!");
-  closeModal();
-}

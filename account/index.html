@@ -21,14 +21,15 @@
         <div id="background">
             <div id="userinfo">
                 <h2 id="hello" class="lefttext">Hello, username</h2>
-                <img style="border-radius: 50%;" width="140px" height="140px" src="https://th.bing.com/th/id/OIP.40UQcy4H44hjkXBXrko2FAHaEo?w=272&h=180&c=7&r=0&o=5&dpr=1.2&pid=1.7">
+                <img style="border-radius: 50%;" width="140px" height="140px"
+                    src="https://th.bing.com/th/id/OIP.40UQcy4H44hjkXBXrko2FAHaEo?w=272&h=180&c=7&r=0&o=5&dpr=1.2&pid=1.7">
                 <br>
                 <br>
                 <p id="email" class="lefttext"></p>
                 <p id="creationdate" class="lefttext"><strong>UTC creation date:</strong><br> date</p>
                 <br>
                 <br>
-                <button class="danger-btn">Delete account</button>
+                <button id="delete-account-btn" class="danger-btn">Delete account</button>
             </div>
             <div id="sessions">
                 <h3>Sessions:</h3>
@@ -37,19 +38,18 @@
     </main>
     <div id="myModal" class="modal">
         <div class="modal-header">
-          <h2>Modal Title</h2>
-          <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2>Modal Title</h2>
+            <span class="modal-close" id="modal-close">&times;</span>
         </div>
         <div class="modal-content">
-          <p>This is a sample modal. You can put any content here.</p>
+            <p>Are you sure?</p>
         </div>
         <div class="modal-footer">
-          <button class="danger-btn" onclick="closeModal()">Close</button>
-          <button onclick="confirmAction()">Confirm</button>
+            <button id="modal-close">Close</button>
+            <button class="danger-btn" id="modal-confirm">Confirm</button>
         </div>
-      </div>
-      
-      <button id="modal-btn-open">Open Modal</button>      
+    </div>
+
     <script type="module" src="main.js"></script>
 </body>
 
