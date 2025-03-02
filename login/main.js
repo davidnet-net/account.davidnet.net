@@ -1,5 +1,7 @@
+import { get_session_information, is_session_valid } from "./session.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
-    if (await isSessionValid()) {
+    if (await is_session_valid()) {
         redirectToAccount();
     }
 
