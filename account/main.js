@@ -113,6 +113,15 @@ function display_session(id, ip, creationdate) {
     newSessionDiv.innerHTML = sessionHTML;
     sessionDiv.appendChild(newSessionDiv);
 
+    // Get the current session ID (from sessioninfo or another source)
+    const currentSessionId = sessioninfo.id;  // Assuming sessioninfo is available here
+
+    // Apply a green background to the current session
+    if (id === currentSessionId) {
+        newSessionDiv.querySelector('.session').style.backgroundColor = '#e0f7e0';  // Light green background
+        newSessionDiv.querySelector('.session').style.border = '1px solid #4caf50';  // Green border
+    }
+
     const logoutButton = document.getElementById(`logout-btn-${id}`);
     if (logoutButton) {
         logoutButton.addEventListener('click', () => handleLogout(id));
