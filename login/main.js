@@ -1,151 +1,153 @@
-document.getElementById("login-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    document.getElementById("login").style.display = "none";
-    document.getElementById("loggingin").style.display = "flex";
-
-    // Clear previous errors
-    clearErrors();
-
-    // Get form data
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-
-    // Prepare the data to send to the server
-    const requestData = {
-        username: username,
-        password: password,
-        totp_token: "0"
-    };
-
-    try {
-        // Make the POST request
-        const response = await fetch("https://auth.davidnet.net/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        });
-        const result = await response.json();
-
-        // Show response message
-        const messageDiv = document.getElementById("response-message2");
-        if (response.ok) {
-            messageDiv.textContent = "Login successful!";
-            messageDiv.style.color = "green";
-
-            if (result.message == "verify_email") {
-                setTimeout(() => {
-                    window.location =
-                        "https://account.davidnet.net/links/verify_email?token=" +
-                        result.email_token;
-                }, 1500);
-            } else if (result.message == "give_totp") {
-                document.getElementById("loggingin").style.display = "none";
-                document.getElementById("totp").style.display = "flex";
-
-                const inputs = document.querySelectorAll(".totp-box");
-                const targetString = "123456";
-                const successColor = "green";
-
-                // Restrict input to numbers only
-                inputs.forEach(input => {
-                    input.addEventListener("input", (e) => {
-                        const value = e.target.value;
-                        if (!/^\d*$/.test(value)) {
-                            e.target.value = value.slice(0, -1);
-                        }
-                    });
-                });
-
-                inputs.forEach((input, index) => {
-                    input.addEventListener("input", () => {
-                        if (input.value && index < inputs.length - 1) {
-                            inputs[index + 1].focus();
-                        }
-
-                        // Check if all inputs are filled
-                        if (Array.from(inputs).every(input => input.value.length === 1)) {
-                            const enteredString = Array.from(inputs).map(input => input.value).join('');
-                            if (enteredString === targetString) {
-                                inputs.forEach(input => input.style.borderColor = successColor);
-                                alert("Success! TOTP is valid.");
-                            }
-                        }
-                    });
-
-                    input.addEventListener("keydown", (e) => {
-                        // Allow backspace to move focus backward
-                        if (e.key === "Backspace" && !input.value && index > 0) {
-                            inputs[index - 1].focus();
-                        }
-                    });
-                });
-            }
-            else {
-                localStorage.setItem("session-token", result.session_token);
-                console.log("Stored session_token: " + result.session_token);
-
-                setTimeout(() => {
-                    window.location = "https://account.davidnet.net/account";
-                }, 1500);
-            }
-        } else {
-            handleErrors(result.error);
-            document.getElementById("login").style.display = "block";
-            document.getElementById("loggingin").style.display = "none";
-        }
-    } catch (error) {
-        console.error(error);
-        const messageDiv = document.getElementById("response-message2");
-        messageDiv.textContent = "Network security violation!";
-        messageDiv.style.color = "red";
+document.addEventListener("DOMContentLoaded", async () => {
+    if (await isSessionValid()) {
+        redirectToAccount();
     }
+
+    document.getElementById("login-form").addEventListener("submit", handleLogin);
 });
 
-function handleErrors(error) {
-    console.log("Handling error:", error); // Debugging error
+async function handleLogin(event) {
+    event.preventDefault();
+    toggleLoginState(true);
+    clearErrors();
 
-    if (error.includes("Invalid username")) {
-        document.getElementById("username").classList.add("error-input");
-        document.getElementById("username-error").textContent =
-            "Incorrect username.";
-    } else if (error.includes("Invalid password")) {
-        document.getElementById("password").classList.add("error-input");
-        document.getElementById("password-error").textContent =
-            "Incorrect password.";
-    } else if (error.includes("Missing fields")) {
-        if (!document.getElementById("username").value) {
-            document.getElementById("username").classList.add("error-input");
-            document.getElementById("username-error").textContent =
-                "Username is required.";
-        }
-        if (!document.getElementById("password").value) {
-            document.getElementById("password").classList.add("error-input");
-            document.getElementById("password-error").textContent =
-                "Password is required.";
-        }
-    } else {
-        const messageDiv = document.getElementById("response-message");
-        messageDiv.textContent = "Something went wrong. Please try again later.";
-        messageDiv.style.color = "red";
+    const requestData = getLoginFormData();
+    try {
+        const response = await sendLoginRequest(requestData);
+        await processLoginResponse(response, requestData);
+    } catch (error) {
+        showError("Network security violation!");
+        toggleLoginState(false);
     }
+}
+
+function getLoginFormData() {
+    return {
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        totp_token: "0"
+    };
+}
+
+async function sendLoginRequest(data) {
+    const response = await fetch("https://auth.davidnet.net/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+    return response.json().then(result => ({ response, result }));
+}
+
+async function processLoginResponse({ response, result }, requestData) {
+    if (response.ok) {
+        handleSuccessfulLogin(result, requestData);
+    } else {
+        handleErrors(result.error);
+        toggleLoginState(false);
+    }
+}
+
+function handleSuccessfulLogin(result, requestData) {
+    if (result.message === "verify_email") {
+        redirectTo(`https://account.davidnet.net/links/verify_email?token=${result.email_token}`);
+    } else if (result.message === "give_totp") {
+        showTotpInput(requestData);
+    } else {
+        storeSessionToken(result.session_token);
+        redirectToAccount();
+    }
+}
+
+function showTotpInput(requestData) {
+    toggleLoginState(false);
+    document.getElementById("totp").style.display = "flex";
+
+    const inputs = document.querySelectorAll(".totp-box");
+    inputs.forEach((input, index) => {
+        input.addEventListener("input", () => handleTotpInput(input, index, inputs, requestData));
+        input.addEventListener("keydown", (e) => handleTotpBackspace(e, input, index, inputs));
+    });
+}
+
+async function handleTotpInput(input, index, inputs, requestData) {
+    if (input.value && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+    }
+
+    if (Array.from(inputs).every(input => input.value.length === 1)) {
+        requestData.totp_token = inputsToTotpString(inputs);
+        await verifyTotp(requestData);
+    }
+}
+
+function handleTotpBackspace(event, input, index, inputs) {
+    if (event.key === "Backspace" && !input.value && index > 0) {
+        inputs[index - 1].focus();
+    }
+}
+
+async function verifyTotp(requestData) {
+    try {
+        const { response, result } = await sendLoginRequest(requestData);
+        if (response.ok) {
+            storeSessionToken(result.session_token);
+            redirectToAccount();
+        } else {
+            handleErrors(result.error);
+        }
+    } catch {
+        showError("Network error while verifying TOTP");
+    }
+}
+
+function toggleLoginState(loggingIn) {
+    document.getElementById("login").style.display = loggingIn ? "none" : "block";
+    document.getElementById("loggingin").style.display = loggingIn ? "flex" : "none";
+}
+
+function storeSessionToken(token) {
+    localStorage.setItem("session-token", token);
+}
+
+function redirectTo(url) {
+    setTimeout(() => window.location.href = url, 1500);
+}
+
+function redirectToAccount() {
+    redirectTo("https://account.davidnet.net/account");
+}
+
+function inputsToTotpString(inputs) {
+    return Array.from(inputs).map(input => input.value).join('');
+}
+
+function handleErrors(error) {
+    console.log("Handling error:", error);
+    
+    if (error.includes("Invalid username")) {
+        showFieldError("username", "Incorrect username.");
+    } else if (error.includes("Invalid password")) {
+        showFieldError("password", "Incorrect password.");
+    } else if (error.includes("Missing fields")) {
+        if (!document.getElementById("username").value) showFieldError("username", "Username is required.");
+        if (!document.getElementById("password").value) showFieldError("password", "Password is required.");
+    } else {
+        showError("Something went wrong. Please try again later.");
+    }
+}
+
+function showFieldError(fieldId, message) {
+    document.getElementById(fieldId).classList.add("error-input");
+    document.getElementById(`${fieldId}-error`).textContent = message;
+}
+
+function showError(message) {
+    const messageDiv = document.getElementById("response-message2");
+    messageDiv.textContent = message;
+    messageDiv.style.color = "red";
 }
 
 function clearErrors() {
-    // Clear all error messages and input highlights
-    const errorFields = document.querySelectorAll(".error");
-    errorFields.forEach((field) => field.textContent = "");
-    const errorInputs = document.querySelectorAll(".error-input");
-    errorInputs.forEach((input) => input.classList.remove("error-input"));
+    document.querySelectorAll(".error").forEach(field => field.textContent = "");
+    document.querySelectorAll(".error-input").forEach(input => input.classList.remove("error-input"));
 }
-
-import { get_session_information, is_session_valid } from "/session.js";
-
-document.addEventListener("DOMContentLoaded", async () => {
-    const valid = await is_session_valid();
-    if (valid === true) {
-        window.location.href = "https://account.davidnet.net/account/";
-    }
-});
