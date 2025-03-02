@@ -37,7 +37,7 @@ async function loadSessions() {
 
     const sessions = await get_sessions();
     sessions.forEach(session => {
-        display_session(session.id, session.ip, session.created_at);
+        display_session(session, sessioninfo);  // Pass session and sessioninfo to display_session
     });
     console.log("Sessions:", sessions);
 }
@@ -91,7 +91,8 @@ async function handleLogout(id) {
 }
 
 // Function to display session details
-function display_session(id, ip, creationdate) {
+function display_session(session, sessioninfo) {
+    const { id, ip, created_at } = session;
     const sessionDiv = document.getElementById("sessions");
 
     if (!sessionDiv) {
@@ -103,7 +104,7 @@ function display_session(id, ip, creationdate) {
         <div class="session" id="session-${id}">
             <h3>${id}</h3>
             <p class="lefttext"><strong>IP:</strong><br>${ip}</p>
-            <p class="lefttext"><strong>UTC Creationdate:</strong><br>${creationdate}</p>
+            <p class="lefttext"><strong>UTC Creationdate:</strong><br>${created_at}</p>
             <button class="logout-btn" id="logout-btn-${id}">Log out</button>
             <p></p>
         </div>
@@ -113,11 +114,8 @@ function display_session(id, ip, creationdate) {
     newSessionDiv.innerHTML = sessionHTML;
     sessionDiv.appendChild(newSessionDiv);
 
-    // Get the current session ID (from sessioninfo or another source)
-    const currentSessionId = sessioninfo.id;  // Assuming sessioninfo is available here
-
-    // Apply a green background to the current session
-    if (id === currentSessionId) {
+    // Check if the current session is the same as this one
+    if (id === sessioninfo.id) {
         newSessionDiv.querySelector('.session').style.backgroundColor = '#e0f7e0';  // Light green background
         newSessionDiv.querySelector('.session').style.border = '1px solid #4caf50';  // Green border
     }
