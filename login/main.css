@@ -1,81 +1,81 @@
 main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .login {
-    height: 600px;
-    width: 420px;
-    background-color: #1c1e1f;
-    text-align: center;
-    font-family: sans-serif;
-    padding: 5px;
-    margin: 0px;
-    min-width: 400px;
-    border-radius: 8px;
+  height: 600px;
+  width: 420px;
+  background-color: #1c1e1f;
+  text-align: center;
+  font-family: sans-serif;
+  padding: 5px;
+  margin: 0px;
+  min-width: 400px;
+  border-radius: 8px;
 }
 
 .error {
-    color: red;
-    font-size: 0.9em;
+  color: red;
+  font-size: 0.9em;
 }
 
 .error-input {
-    border: 1px solid red;
+  border: 1px solid red;
 }
 
 #loggingin {
-    display: none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 15px;
-    font-weight: bolder;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+  font-weight: bolder;
 }
 
 .loader {
-    width: 90px;
-    height: 90px;
-    position: relative;
-    overflow: hidden;
+  width: 90px;
+  height: 90px;
+  position: relative;
+  overflow: hidden;
 }
 
 .loader:before,
 .loader:after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    background: #FFF;
-    transform: translate(-50%, 100%) scale(0);
-    animation: push 2s infinite ease-in;
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, 100%) scale(0);
+  animation: push 2s infinite ease-in;
 }
 
 .loader:after {
-    animation-delay: 1s;
+  animation-delay: 1s;
 }
 
 @keyframes push {
-    0% {
-        transform: translate(-50%, 100%) scale(1);
-    }
+  0% {
+    transform: translate(-50%, 100%) scale(1);
+  }
 
-    15%,
-    25% {
-        transform: translate(-50%, 50%) scale(1);
-    }
+  15%,
+  25% {
+    transform: translate(-50%, 50%) scale(1);
+  }
 
-    50%,
-    75% {
-        transform: translate(-50%, -30%) scale(0.5);
-    }
+  50%,
+  75% {
+    transform: translate(-50%, -30%) scale(0.5);
+  }
 
-    80%,
-    100% {
-        transform: translate(-50%, -50%) scale(0);
-    }
+  80%,
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+  }
 }
