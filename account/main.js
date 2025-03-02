@@ -2,100 +2,75 @@ import { is_session_valid, get_session_information, get_session_token } from '/s
 
 document.addEventListener("DOMContentLoaded", async () => {
     const valid = await is_session_valid();
-    if (valid === false) {
+    if (!valid) {
         window.location.href = "https://account.davidnet.net/login/";
+        return; // Stop de code hier als de sessie ongeldig is
     }
-});
 
-document.addEventListener("DOMContentLoaded", async () => {
-    if (is_session_valid() === false) {
-        window.location = "https://account.davidnet.net/login/";
-    }
-    const session_token =  get_session_token();
-    console.log("session_token: " + session_token);
+    const session_token = await get_session_token();
+    console.log("session_token:", session_token);
 
-    const sessioninfo = get_session_information();
-    const id = sessioninfo.id;
-    const userid = sessioninfo.userid;
-    const ip = sessioninfo.ip;
-    const created_at = sessioninfo.created_at;
-    console.log("Session info:")
-    console.log(sessioninfo)
+    const sessioninfo = await get_session_information();
+    console.log("Session info:", sessioninfo);
 
-    //display_session()
-    const requestData = {
-        token: session_token
-    };
+    const { id, userid, ip, created_at } = sessioninfo;
+
+    const requestData = { token: session_token };
 
     const get_sessions = async () => {
-        const requestData = {
-            token: session_token,
-            userid: userid
-        };
         const response = await fetch('https://auth.davidnet.net/get_sessions', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: session_token, userid })
         });
-        const result = await response.json();
-        return result.sessions
+        return (await response.json()).sessions;
     };
-    console.log("Sessions:")
-    console.log(await get_sessions());
 
-    // Make the POST request to get the email
+    console.log("Sessions:", await get_sessions());
+
     const getEmail = async () => {
         const response = await fetch('https://auth.davidnet.net/get_email', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestData),
         });
-        const result = await response.json();
-        return result.email;
+        return (await response.json()).email;
     };
-    console.log("User email:")
-    console.log(await getEmail());
 
-    // Make the POST request to get the creation date
     const getCreatedAt = async () => {
         const response = await fetch('https://auth.davidnet.net/get_created_at', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestData),
         });
-        const result = await response.json();
-        return result.created_at;
+        return (await response.json()).created_at;
     };
-    console.log("User created at:")
-    console.log(await getCreatedAt());
 
-    // Wait for both requests
-    const email = await getEmail();
-    const creationDate = await getCreatedAt();
+    // Wacht op beide requests tegelijkertijd
+    const [email, creationDate] = await Promise.all([getEmail(), getCreatedAt()]);
 
-    // Set the content on the page
-    document.getElementById("email").textContent = "<strong>Email:</strong><br>" + email;
-    document.getElementById("creationdate").textContent = "<strong>UTC Creation date:</strong><br>" + creationDate;
+    document.getElementById("email").textContent = `Email: ${email}`;
+    document.getElementById("creationdate").textContent = `UTC Creation date: ${creationDate}`;
 });
 
+// Correcte versie van display_session()
 function display_session(id, ip, creationdate) {
-    const sessionDiv = document.getElementById(sessions);
+    const sessionDiv = document.getElementById("sessions");
 
-    // Create the content for session div
-    sessionDiv.innerHTML = `
-        <h3>${id}</h3>
-        <p class="lefttext"><strong>IP:</strong><br>${ip}</p>
-        <p class="lefttext"><strong>UTC Creationdate:</strong><br>${creationdate}</p>
-        <button onclick="handleLogout('${id}')">Log out</button>
-        <P></P>
+    if (!sessionDiv) {
+        console.error("Element with ID 'sessions' not found.");
+        return;
+    }
+
+    const sessionHTML = `
+        <div>
+            <h3>${id}</h3>
+            <p class="lefttext"><strong>IP:</strong><br>${ip}</p>
+            <p class="lefttext"><strong>UTC Creationdate:</strong><br>${creationdate}</p>
+            <button onclick="handleLogout('${id}')">Log out</button>
+            <p></p>
+        </div>
     `;
 
-    // Append the session div to the body (or any other container element)
-    document.body.appendChild(document.getElementById("sessions"));
+    sessionDiv.innerHTML += sessionHTML;
 }
