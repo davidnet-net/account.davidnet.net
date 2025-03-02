@@ -3,6 +3,8 @@ import { is_session_valid, get_session_information, get_session_token } from '/s
 // Define the handleLogout function globally
 async function handleLogout(id) {
     const token = await get_session_token();
+    console.log("Logging out id: " + id + "  with our token: " + token)
+
     const response = await fetch('https://auth.davidnet.net/delete_session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
