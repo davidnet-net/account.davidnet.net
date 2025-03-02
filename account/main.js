@@ -1,4 +1,4 @@
-import { is_session_valid, get_session_information, get_session_token } from './session.js';
+import { is_session_valid, get_session_information, get_session_token } from '/session.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     if (is_session_valid() === false) {
