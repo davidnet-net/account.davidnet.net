@@ -41,16 +41,15 @@ async function sendLoginRequest(data) {
 
 function processLoginResponse(success, result) {
     if (success) {
-        showMessage("Login successful!", "green");
-
-        if (result.message === "verify_email") {
-            redirectWithDelay(`https://account.davidnet.net/links/verify_email?token=${result.email_token}`);
-        } else {
+        // No TOTP required or TOTP verified
+        if (result.message !== "give_totp") {
+            showMessage("Login successful!", "green");
             localStorage.setItem("session-token", result.session_token);
             console.log("Stored session_token:", result.session_token);
             redirectWithDelay("https://account.davidnet.net/account");
         }
     } else if (result.message === "give_totp") {
+        // TOTP required, show TOTP input
         handleTOTP();
     } else {
         handleErrors(result.error);
@@ -105,6 +104,7 @@ function redirectWithDelay(url, delay = 1500) {
         window.location = url;
     }, delay);
 }
+
 
 
 
