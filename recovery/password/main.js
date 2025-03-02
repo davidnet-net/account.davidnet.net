@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-//localStorage.setItem("recovery-token", null);
-
 document.getElementById("recovery-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -45,6 +43,7 @@ document.getElementById("recovery-form").addEventListener("submit", async (e) =>
         if (response.ok) {
             document.getElementById("pass-recovery").style.display = "none";
             document.getElementById("success").style.display = "flex";
+            localStorage.setItem("recovery-token", null);
         } else {
             window.location = "/recovery/error/?err=Token expired! Or something wrent wrong."
         }
