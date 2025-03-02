@@ -47,6 +47,7 @@ function promptChoice(closeText, confirmText, message, title) {
         }
 
         closeButton.addEventListener("click", onClose);
+        closeButton_x.addEventListener("click", onClose);
         confirmButton.addEventListener("click", onConfirm);
     });
 }
