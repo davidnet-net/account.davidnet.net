@@ -1,4 +1,4 @@
-import { is_session_valid, get_session_information } from '/session.js';
+import { is_session_valid, get_session_information, get_session_token } from '/session.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const valid = await is_session_valid();
@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (is_session_valid() === false) {
         window.location = "https://account.davidnet.net/login/";
     }
+    const session_token =  get_session_token();
 
     const sessioninfo = get_session_information();
     const id = sessioninfo.id;
@@ -20,12 +21,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     //display_session()
     const requestData = {
-        token: get_session_token(),
+        token: session_token
     };
 
     const get_sessions = async () => {
         const requestData = {
-            token: get_session_token(),
+            token: session_token,
             userid: userid
         };
         const response = await fetch('https://auth.davidnet.net/get_sessions', {
