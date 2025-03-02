@@ -12,12 +12,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location = "https://account.davidnet.net/login/";
     }
     const session_token =  get_session_token();
+    console.log("session_token: " + session_token);
 
     const sessioninfo = get_session_information();
     const id = sessioninfo.id;
     const userid = sessioninfo.userid;
     const ip = sessioninfo.ip;
     const created_at = sessioninfo.created_at;
+    console.log("Session info:")
+    console.log(sessioninfo)
 
     //display_session()
     const requestData = {
@@ -39,6 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result = await response.json();
         return result.sessions
     };
+    console.log("Sessions:")
     console.log(await get_sessions());
 
     // Make the POST request to get the email
@@ -53,6 +57,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result = await response.json();
         return result.email;
     };
+    console.log("User email:")
+    console.log(await getEmail());
 
     // Make the POST request to get the creation date
     const getCreatedAt = async () => {
@@ -66,6 +72,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result = await response.json();
         return result.created_at;
     };
+    console.log("User created at:")
+    console.log(await getCreatedAt());
 
     // Wait for both requests
     const email = await getEmail();
