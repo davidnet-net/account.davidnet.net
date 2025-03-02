@@ -90,4 +90,7 @@ async function handleLogout(id) {
         });
         return (await response.json()).email;
     };
+
+    const email = await logout();
+    console.log("Logged out session from email:", email);
 }
