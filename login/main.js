@@ -43,7 +43,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
                 }, 1500);
             } else if (result.message == "2fa") {
                 localStorage.setItem("early-login-token", result.early_login_token);
-                console.log("Got 2FA Request from server token: " + result.session_token);
+                console.log("Got 2FA Request from server token: " + result.early_login_token);
                 document.getElementById("twofa").style.display = "flex";
                 document.getElementById("loggingin").style.display = "none";
             } else {
