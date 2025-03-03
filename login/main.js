@@ -42,17 +42,19 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
                         result.email_token;
                 }, 1500);
             } else if (result.message == "2fa") {
-                localStorage.setItem("early-login-token", result.early_login_token);
-                console.log("Got 2FA Request from server token: " + result.early_login_token);
-                document.getElementById("twofa").style.display = "flex";
-                document.getElementById("loggingin").style.display = "none";
+                setTimeout(() => {
+                    localStorage.setItem("early-login-token", result.early_login_token);
+                    console.log("Got 2FA Request from server token: " + result.early_login_token);
+                    document.getElementById("twofa").style.display = "flex";
+                    document.getElementById("loggingin").style.display = "none";
+                }, 1000);
             } else {
                 localStorage.setItem("session-token", result.session_token);
                 console.log("Stored session_token: " + result.session_token);
 
                 setTimeout(() => {
                     window.location = "https://account.davidnet.net/account";
-                }, 1500);
+                }, 1000);
             }
         } else {
             handleErrors(result.error);
