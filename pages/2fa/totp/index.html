@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOTP Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/otpauth/9.0.1/otpauth.umd.min.js"></script>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+
+    <main>
+        <div class="totp" id="main">
+            <h2>Scan the QR Code with your authenticator</h2>
+            <div class="centerpls">
+                <div class="qrcode-container" id="qrcode"></div>
+            </div>
+            
+            <div class="totp-container">
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+            </div>
+            <p>After entering the correct code totp will be activated!</p>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
