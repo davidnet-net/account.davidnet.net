@@ -1,0 +1,113 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login {
+    height: 600px;
+    width: 420px;
+    background-color: #1c1e1f;
+    text-align: center;
+    font-family: sans-serif;
+    padding: 5px;
+    margin: 0px;
+    min-width: 400px;
+    border-radius: 8px;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+}
+
+.error-input {
+    border: 1px solid red;
+}
+
+#loggingin {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    font-weight: bolder;
+}
+
+#totp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.loader {
+    width: 90px;
+    height: 90px;
+    position: relative;
+    overflow: hidden;
+}
+
+.loader:before,
+.loader:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(-50%, 100%) scale(0);
+    animation: push 2s infinite ease-in;
+}
+
+.loader:after {
+    animation-delay: 1s;
+}
+
+@keyframes push {
+    0% {
+        transform: translate(-50%, 100%) scale(1);
+    }
+
+    15%,
+    25% {
+        transform: translate(-50%, 50%) scale(1);
+    }
+
+    50%,
+    75% {
+        transform: translate(-50%, -30%) scale(0.5);
+    }
+
+    80%,
+    100% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+}
+
+.totp-container {
+    display: flex;
+    gap: 8px;
+}
+
+.totp-box {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.totp-box:focus {
+    border-color: #ffffff2a;
+}
+
+.totp-container input {
+    text-transform: uppercase;
+}

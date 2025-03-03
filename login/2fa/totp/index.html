@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>DN - Login</title>
+
+    <head>
+        <meta name="description" content="Login into your davidnet account.">
+        <link rel="icon" href="h/favicon.png" type="image/png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="../main.css">
+    </head>
+
+<body>
+    <nav>
+        <a href="https://davidnet.net">Home</a>
+        <a href="/signup/">Sign-up</a>
+    </nav>
+    <main>
+        <div class="login" id="loggingin">
+            <span class="loader"></span>
+            <div id="response-message2"></div>
+        </div>
+        <div class="login" id="totp">
+            <h2>Please enter your totp code</h2>
+            <div class="totp-container">
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+                <input type="text" maxlength="1" class="totp-box" />
+            </div>
+        </div>
+    </main>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
