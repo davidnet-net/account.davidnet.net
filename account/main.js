@@ -258,16 +258,20 @@ async function load2famanager() {
         const response = await fetch("https://auth.davidnet.net/get_2fa_information", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: session_token}),
+            body: JSON.stringify({ token: session_token }),
         });
         const result = await response.json();
-        
+
         if (response.ok) {
             if (result.totp == true) {
                 document.getElementById("disable-totp-btn").style.display = "block";
                 document.getElementById("disable-totp-btn").addEventListener("click", disabletotp);
             } else {
                 document.getElementById("enable-totp-btn").style.display = "block";
+                document.getElementById("enable-totp-btn").addEventListener("click", async () => {
+                    const result = await promptChoice("Cancel", "Yes", "Are you sure you want to enable TOTP?", "Account 2FA security!");
+                    if (result == true) { window.location.href = "https://account.davidnet.net/pages/2fa/totp" };
+                });                
             }
         } else {
             await promptChoice("Ok", "):", "We couldnt load 2FA management!", "Something wrent wrong!");
@@ -286,10 +290,10 @@ async function disabletotp() {
             const response = await fetch("https://auth.davidnet.net/disable_totp", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: session_token}),
+                body: JSON.stringify({ token: session_token }),
             });
             const result = await response.json();
-            
+
             if (response.ok) {
                 window.location.reload();
             } else {
