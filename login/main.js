@@ -42,6 +42,8 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
                         result.email_token;
                 }, 1500);
             } else if (result.message == "2fa") {
+                messageDiv.textContent = "Preparing 2FA!";
+                messageDiv.style.color = "white";
                 setTimeout(() => {
                     localStorage.setItem("early-login-token", result.early_login_token);
                     console.log("Got 2FA Request from server token: " + result.early_login_token);
