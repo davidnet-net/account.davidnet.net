@@ -24,6 +24,9 @@ inputs.forEach((input, index) => {
             const enteredString = Array.from(inputs).map(input => input.value).join('');
             console.log("Entered TOTP:", enteredString);
 
+            document.getElementById("totp").style.display = "none";
+            document.getElementById("loggingin").style.display = "flex";
+
             try {
                 const response = await fetch("https://auth.davidnet.net/verify_totp", {
                     method: "POST",
@@ -39,6 +42,8 @@ inputs.forEach((input, index) => {
                 if (!response.ok) {
                     if (result.error == "Invalid code") {
                         errmsg.innerText = "Invalid code";
+                        document.getElementById("totp").style.display = "flex";
+                        document.getElementById("loggingin").style.display = "none";
                     } else {
                         window.location = "https://account.davidnet.net/login";
                     }                  
