@@ -1,7 +1,5 @@
 const inputs = document.querySelectorAll(".totp-box");
-const targetString = "123456"; // Replace with the string you're validating
-const defaultColor = "#ccc";  // Default border color (e.g., gray)
-const successColor = "green"; // Border color when TOTP is correct
+const errmsg = document.getElementById("error");
 
 // Restrict input to numbers only
 inputs.forEach(input => {
@@ -24,13 +22,7 @@ inputs.forEach((input, index) => {
         // Check if all inputs are filled
         if (Array.from(inputs).every(input => input.value.length === 1)) {
             const enteredString = Array.from(inputs).map(input => input.value).join('');
-            if (enteredString === targetString) {
-                inputs.forEach(input => input.style.borderColor = successColor);
-                alert("Success! TOTP is valid.");
-            } else {
-                inputs.forEach(input => input.style.borderColor = defaultColor);
-                alert("Invalid TOTP.");
-            }
+            console.log("Entered TOTP:", enteredString);
         }
     });
 
@@ -40,4 +32,27 @@ inputs.forEach((input, index) => {
             inputs[index - 1].focus();
         }
     });
+});
+
+// Controleer of de gebruiker een geldige early login token heeft
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const response = await fetch("https://auth.davidnet.net/is_valid_early_login_token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token: localStorage.getItem("early-login-token") }),
+        });
+
+        const result = await response.json();
+        console.log(result);
+
+        if (!response.ok) {
+            window.location = "https://account.davidnet.net/login";
+        }
+    } catch (error) {
+        console.error("Error during token validation:", error);
+        window.location = "https://account.davidnet.net/login";
+    }
 });

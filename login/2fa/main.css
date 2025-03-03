@@ -21,10 +21,6 @@ main {
     font-size: 0.9em;
 }
 
-.error-input {
-    border: 1px solid red;
-}
-
 #loggingin {
     display: none;
     justify-content: center;
