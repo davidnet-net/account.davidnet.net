@@ -27,6 +27,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
             body: JSON.stringify(requestData),
         });
         const result = await response.json();
+        console.log(result);
 
         // Show response message
         const messageDiv = document.getElementById("response-message2");
