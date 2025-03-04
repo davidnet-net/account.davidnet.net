@@ -1,4 +1,4 @@
-import { get_session_information, is_session_valid } from "/session.js";
+import { get_session_information, is_session_valid, get_session_token } from "/session.js";
 
 const session_token = await get_session_token();
 let username = "";
