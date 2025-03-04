@@ -18,9 +18,6 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
     };
 
     try {
-        messageDiv.textContent = "Waiting for server response!";
-        messageDiv.style.color = "white";
-
         // Make the POST request
         const response = await fetch("https://auth.davidnet.net/login", {
             method: "POST",
