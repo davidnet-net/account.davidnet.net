@@ -44,14 +44,16 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
             } else if (result.message == "2fa") {
                 messageDiv.textContent = "Preparing 2FA!";
                 messageDiv.style.color = "white";
-                localStorage.setItem("early-login-token", result.early_login_token);
+
+                const earlyLoginToken = result.early_login_token;
+                localStorage.setItem("early-login-token", earlyLoginToken);
                 console.log("Got 2FA Request from server token: " + result.early_login_token);
 
                 try {
                     const response = await fetch("https://auth.davidnet.net/get_2fa_information", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ token: localStorage.getItem("early-login-token") }),
+                        body: JSON.stringify({ token: earlyLoginToken }),
                     });
                     const result = await response.json();
 
