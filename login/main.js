@@ -51,7 +51,7 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
                     const response = await fetch("https://auth.davidnet.net/get_2fa_information", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ token: result.early_login_token }),
+                        body: JSON.stringify({ token: localStorage.getItem("early-login-token") }),
                     });
                     const result = await response.json();
 
