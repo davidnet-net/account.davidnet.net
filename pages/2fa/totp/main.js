@@ -13,7 +13,7 @@ try {
     if (response.ok) {
         username = result.username;
     } else {
-        await promptChoice("Ok", "):", "We couldnt process 2FA changes!", "Something wrent wrong!");
+        window.location = "https://account.davidnet.net"
     }
 } catch (error) {
     console.error("Failed to totp info:", error);
@@ -55,7 +55,7 @@ inputs.forEach(input => {
 
 // Auto-focus en validatie
 inputs.forEach((input, index) => {
-    input.addEventListener("input", () => {
+    input.addEventListener("input", async () => {
         if (input.value && index < inputs.length - 1) {
             inputs[index + 1].focus();
         }
@@ -67,6 +67,31 @@ inputs.forEach((input, index) => {
             if (enteredString === expectedCode) {
                 inputs.forEach(input => input.style.borderColor = successColor);
                 console.log("Secret:", secret.base32);
+
+                document.getElementById("error").style.color = "green";
+                document.getElementById("error").innerText = "Correct code, Please wait...";
+
+                try {
+                    const response = await fetch("https://auth.davidnet.net/set_up_totp", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ token: session_token, secret: secret.base32 }),
+                    });
+                    const result = await response.json();
+                
+                    if (response.ok) {
+                        document.getElementById("error").innerText = "TOTP Setup complete";
+                        setTimeout(() => {
+                            window.location = "https://account.davidnet.net/account";
+                        }, 1000);
+                    } else {
+                        document.getElementById("error").style.color = "red";
+                        document.getElementById("error").innerText = "Something wrent wrong! TOTP not enabled.";
+                    }
+                } catch (error) {
+                    console.error("Failed to totp info:", error);
+                }
+                
             } else {
                 inputs.forEach(input => input.style.borderColor = errorcolor);
             }
