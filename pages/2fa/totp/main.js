@@ -17,7 +17,6 @@ try {
     }
 } catch (error) {
     console.error("Failed to totp info:", error);
-    return [];
 }
 
 // Genereer een TOTP-secret
