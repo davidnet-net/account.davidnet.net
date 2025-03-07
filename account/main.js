@@ -90,6 +90,22 @@ async function getSessions(sessionToken, userid) {
     }
 }
 
+// Fetch all logs
+async function getLogs(sessionToken) {
+    try {
+        const response = await fetch("https://auth.davidnet.net/get_account_logs", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: sessionToken }),
+        });
+        const data = await response.json();
+        return data.logs || [];
+    } catch (error) {
+        console.error("Failed to fetch logs:", error);
+        return [];
+    }
+}
+
 // Display session information on the page
 function displaySession(session, sessionInfo) {
     const { id, ip, created_at, useragent } = session;
@@ -129,6 +145,30 @@ function displaySession(session, sessionInfo) {
         console.warn("Logout button not found for session", id);
     }
 }
+
+function displayLog(log) {
+    const { id, title, message, date } = log;
+    const LogsDiv = document.getElementById("logs");
+
+    if (!LogsDiv) {
+        console.error("Element with ID 'logs' not found.");
+        return;
+    }
+
+    const formattedDate = formatUTCDate(date);
+
+    const LogHTML = `
+        <div class="log" id="log-${id}">
+            <h3>${title}</h3>
+            <p>${message}</p>
+            <br>
+            <p class="lefttext"><strong>UTC Date:</strong><br>${formattedDate}</p>
+            <p class="lefttext"><strong>ID:</strong>${id}</p>
+        </div>
+    `;
+    LogsDiv.insertAdjacentHTML("beforeend", LogHTML);
+}
+
 
 // Handle session logout
 async function handleLogout(id) {
@@ -177,6 +217,28 @@ async function loadSessions() {
     });
 }
 
+// Load logs and display them
+async function loadLogs() {
+    const LogsDiv = document.getElementById("logs");
+    if (!LogsDiv) {
+        console.error("Element with ID 'logs' not found.");
+        return;
+    }
+
+    LogsDiv.innerHTML = "<h2>Logs:</h2>";
+
+    // Check if session is valid
+    const valid = await is_session_valid();
+    if (!valid) {
+        window.location.href = "https://account.davidnet.net/login/";
+        return;
+    }
+
+    const logs = await getLogs(); // Fix: Don't destructure
+    logs.forEach(displayLog); // Fix: Directly call `displayLog`
+}
+
+
 // Update user info (email and creation date)
 async function updateUserInfo() {
     try {
@@ -221,6 +283,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     await load2famanager();
 
     document.getElementById("delete-account-btn").addEventListener("click", delete_account);
+    
+    //! Lazy stuff
+    await loadLogs();
 });
 
 async function delete_account() {
@@ -284,24 +349,28 @@ async function load2famanager() {
 
 async function disabletotp() {
     const result = await promptChoice("Cancel", "Yes", "Are you sure you want to disable TOTP?", "Account 2FA security!");
-    if (result == true) {
-        const session_token = await get_session_token();
-        try {
-            const response = await fetch("https://auth.davidnet.net/disable_totp", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: session_token }),
-            });
-            const result = await response.json();
+    if (!result) return;
 
-            if (response.ok) {
-                window.location.reload();
-            } else {
-                await promptChoice("Ok", "):", "We couldnt process 2FA changes!", "Something wrent wrong!");
-            }
-        } catch (error) {
-            console.error("Failed to totp info:", error);
-            return [];
+    const session_token = await get_session_token();
+    const disableButton = document.getElementById("disable-totp-btn");
+
+    try {
+        disableButton.disabled = true; // Prevent multiple clicks
+        const response = await fetch("https://auth.davidnet.net/disable_totp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: session_token }),
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            window.location.reload();
+        } else {
+            await promptChoice("Ok", "):", "We couldn't process 2FA changes!", "Something went wrong!");
         }
+    } catch (error) {
+        console.error("Failed to disable TOTP:", error);
+    } finally {
+        disableButton.disabled = false;
     }
 }

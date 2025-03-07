@@ -40,7 +40,7 @@ main {
   height: 500px;
 }
 
-#sessions {
+#sessions, #logs {
   padding-left: 25px;
   padding-right: 25px;
   width: 200px;
@@ -51,7 +51,7 @@ main {
   gap: 12px;
 }
 
-.session {
+.session, .log {
   border-radius: 15px;
   background-color: #181a1b;
   padding-left: 20px;
