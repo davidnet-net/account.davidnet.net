@@ -234,7 +234,8 @@ async function loadLogs() {
         return;
     }
 
-    const logs = await getLogs(); // Fix: Don't destructure
+    const sessionToken = await get_session_token();
+    const logs = await getLogs(sessionToken); // Fix: Don't destructure
     logs.forEach(displayLog); // Fix: Directly call `displayLog`
 }
 
