@@ -67,7 +67,25 @@ function formatUTCDate(utcDate) {
     });
 }
 
-// Fetches session information
+// Utility function to handle API requests
+async function fetchData(url, data) {
+    const sessionToken = await get_session_token();
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: sessionToken, ...data }),
+        });
+        const result = await response.json();
+        if (response.ok) return result;
+        else throw new Error(result.error || "Request failed");
+    } catch (error) {
+        console.error("Error fetching data from API:", error);
+        return [];
+    }
+}
+
+// Fetch session data
 async function fetchSessionData() {
     const sessionToken = await get_session_token();
     const sessionInfo = await get_session_information();
@@ -76,33 +94,29 @@ async function fetchSessionData() {
 
 // Fetch all sessions for a user
 async function getSessions(sessionToken, userid) {
-    try {
-        const response = await fetch("https://auth.davidnet.net/get_sessions", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: sessionToken, userid }),
-        });
-        const data = await response.json();
-        return data.sessions || [];
-    } catch (error) {
-        console.error("Failed to fetch sessions:", error);
-        return [];
-    }
+    return await fetchData("https://auth.davidnet.net/get_sessions", { userid });
 }
 
 // Fetch all logs
-async function getLogs(sessionToken) {
-    try {
-        const response = await fetch("https://auth.davidnet.net/get_account_logs", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: sessionToken }),
-        });
-        const data = await response.json();
-        return data.logs || [];
-    } catch (error) {
-        console.error("Failed to fetch logs:", error);
-        return [];
+async function getLogs() {
+    return await fetchData("https://auth.davidnet.net/get_account_logs", {});
+}
+
+// Handle session logout
+async function handleLogout(id) {
+    const sessionToken = await get_session_token();
+    const response = await fetch("https://auth.davidnet.net/delete_session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: sessionToken, session_id: id }),
+    });
+
+    if (response.ok) {
+        console.log("Logged out successfully!");
+        loadSessions(); // Reload sessions after logout
+    } else {
+        const result = await response.json();
+        console.error("Logout failed:", result.error);
     }
 }
 
@@ -146,6 +160,7 @@ function displaySession(session, sessionInfo) {
     }
 }
 
+// Display log information on the page
 function displayLog(log) {
     const { id, title, message, date } = log;
     const LogsDiv = document.getElementById("logs");
@@ -167,29 +182,6 @@ function displayLog(log) {
         </div>
     `;
     LogsDiv.insertAdjacentHTML("beforeend", LogHTML);
-}
-
-
-// Handle session logout
-async function handleLogout(id) {
-    try {
-        const token = await get_session_token();
-        const response = await fetch("https://auth.davidnet.net/delete_session", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token, session_id: id }),
-        });
-
-        if (response.ok) {
-            console.log("Logged out successfully!");
-            loadSessions(); // Reload sessions after logout
-        } else {
-            const result = await response.json();
-            console.error("Logout failed:", result.error);
-        }
-    } catch (error) {
-        console.error("Error during logout:", error);
-    }
 }
 
 // Load sessions and display them
@@ -234,11 +226,9 @@ async function loadLogs() {
         return;
     }
 
-    const sessionToken = await get_session_token();
-    const logs = await getLogs(sessionToken); // Fix: Don't destructure
-    logs.forEach(displayLog); // Fix: Directly call `displayLog`
+    const logs = await getLogs();
+    logs.forEach(displayLog); // Display all logs
 }
-
 
 // Update user info (email and creation date)
 async function updateUserInfo() {
@@ -270,27 +260,15 @@ async function updateUserInfo() {
 
         document.getElementById("hello").textContent = `Hello, ${username}`;
         document.getElementById("email").textContent = `Email: ${email}`;
-        document.getElementById("creationdate").textContent = `UTC Creation date: ${formatUTCDate(creationDate)
-            }`;
+        document.getElementById("creationdate").textContent = `UTC Creation date: ${formatUTCDate(creationDate)}`;
     } catch (error) {
         console.error("Failed to fetch user info:", error);
     }
 }
 
-// Initialize sessions and user info after DOM is loaded
-document.addEventListener("DOMContentLoaded", async () => {
-    await loadSessions();
-    await updateUserInfo();
-    await load2famanager();
-
-    document.getElementById("delete-account-btn").addEventListener("click", delete_account);
-    
-    //! Lazy stuff
-    await loadLogs();
-});
-
+// Delete account
 async function delete_account() {
-    const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete your account and usercontent?", "Account deletion confirmation!");
+    const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete your account and user content?", "Account deletion confirmation!");
     if (result) {
         const session_token = await get_session_token();
         try {
@@ -306,7 +284,6 @@ async function delete_account() {
                 const token = result.delete_token;
                 window.location = "https://account.davidnet.net/links/delete_account?token=" + token;
             } else {
-
                 console.error("delete token collection failed:", result.error);
             }
         } catch (error) {
@@ -317,7 +294,7 @@ async function delete_account() {
     }
 }
 
-
+// 2FA manager
 async function load2famanager() {
     const session_token = await get_session_token();
     try {
@@ -329,25 +306,25 @@ async function load2famanager() {
         const result = await response.json();
 
         if (response.ok) {
-            if (result.totp == true) {
+            if (result.totp) {
                 document.getElementById("disable-totp-btn").style.display = "block";
                 document.getElementById("disable-totp-btn").addEventListener("click", disabletotp);
             } else {
                 document.getElementById("enable-totp-btn").style.display = "block";
                 document.getElementById("enable-totp-btn").addEventListener("click", async () => {
                     const result = await promptChoice("Cancel", "Yes", "Are you sure you want to enable TOTP?", "Account 2FA security!");
-                    if (result == true) { window.location.href = "https://account.davidnet.net/pages/2fa/totp" };
-                });                
+                    if (result) { window.location.href = "https://account.davidnet.net/pages/2fa/totp"; }
+                });
             }
         } else {
-            await promptChoice("Ok", "):", "We couldnt load 2FA management!", "Something wrent wrong!");
+            await promptChoice("Ok", "):", "We couldn't load 2FA management!", "Something went wrong!");
         }
     } catch (error) {
-        console.error("Failed to load totp info:", error);
-        return [];
+        console.error("Failed to load TOTP info:", error);
     }
 }
 
+// Disable TOTP
 async function disabletotp() {
     const result = await promptChoice("Cancel", "Yes", "Are you sure you want to disable TOTP?", "Account 2FA security!");
     if (!result) return;
@@ -375,3 +352,15 @@ async function disabletotp() {
         disableButton.disabled = false;
     }
 }
+
+// Initialize sessions and user info after DOM is loaded
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadSessions();
+    await updateUserInfo();
+    await load2famanager();
+
+    document.getElementById("delete-account-btn").addEventListener("click", delete_account);
+
+    //! lazy
+    await loadLogs();
+});
