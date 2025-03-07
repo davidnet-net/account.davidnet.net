@@ -99,7 +99,7 @@ async function getLogs(sessionToken) {
             body: JSON.stringify({ token: sessionToken }),
         });
         const data = await response.json();
-        return data.logs || [];
+        return data.logs.reverse() || [];
     } catch (error) {
         console.error("Failed to fetch logs:", error);
         return [];
