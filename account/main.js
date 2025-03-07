@@ -239,6 +239,7 @@ async function loadLogs() {
     if (logs.length === 0) {
         LogsDiv.innerHTML = "<h2>No logs available.</h2>"; // Show a message if no logs exist
     } else {
+        console.log(logs);
         logs.forEach(console.log);
         logs.forEach(displayLog); // Fix: Directly call `displayLog`
     }
