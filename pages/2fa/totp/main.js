@@ -43,6 +43,13 @@ const defaultColor = "#ccc";
 const successColor = "green";
 const errorcolor = "red";
 
+// Focus the first input when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+    if (inputs.length > 0) {
+        inputs[0].focus();
+    }
+});
+
 // Restrict input to numbers only
 inputs.forEach(input => {
     input.addEventListener("input", (e) => {
@@ -86,7 +93,7 @@ inputs.forEach((input, index) => {
                         }, 1000);
                     } else {
                         document.getElementById("error").style.color = "red";
-                        document.getElementById("error").innerText = "Something wrent wrong! TOTP not enabled.";
+                        document.getElementById("error").innerText = "Something went wrong! TOTP not enabled.";
                     }
                 } catch (error) {
                     console.error("Failed to totp info:", error);
