@@ -97,21 +97,41 @@ async function get_uploads() {
 async function displayuploads(uploads) {
     uploads.forEach(upload => {
         console.log(upload);
-
+    
         const LogHTML = `
-                <tr>
-                  <td class="uid">${upload.id}</td>
-                  <td><a href="${upload.url}">${upload.url.slice(45)}</a></td>
-                  <td>${upload.type}</td>
-                  <td>${formatUTCDate(upload.created_at)}</td>
-                  <td><div class="table-btn-row"><a download="${upload.url}" class="abutton">Download</a><button id="delete-btn-${upload.id}" class="danger-btn">Delete</button></div></td>
-                </tr>
+            <tr>
+              <td class="uid">${upload.id}</td>
+              <td><a href="${upload.url}">${upload.url.slice(45)}</a></td>
+              <td>${upload.type}</td>
+              <td>${formatUTCDate(upload.created_at)}</td>
+              <td>
+                <div class="table-btn-row">
+                  <a href="${upload.url}" class="abutton" id="download-btn-${upload.id}" download>Download</a>
+                  <button id="delete-btn-${upload.id}" class="danger-btn">Delete</button>
+                </div>
+              </td>
+            </tr>
         `;
+    
         document.getElementById("uploads").insertAdjacentHTML("beforeend", LogHTML);
+    
+        // Handle the delete button
         document.getElementById("delete-btn-" + upload.id).addEventListener("click", async () => {
             await deleteupload(upload.id, upload.url.slice(45));
         });
+    
+        // Add event listener to the download link
+        document.getElementById("download-btn-" + upload.id).addEventListener("click", (e) => {
+            const link = e.target;
+            const fileName = upload.url.slice(45); // Or use a more specific filename if necessary
+            const downloadLink = document.createElement("a");
+            downloadLink.href = upload.url;
+            downloadLink.download = fileName; // Set the file name for download
+            downloadLink.click(); // Trigger the download
+            e.preventDefault(); // Prevent default behavior (opening the file)
+        });
     });
+    
 }
 
 async function deleteupload(id, name) {
