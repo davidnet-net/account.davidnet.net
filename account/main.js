@@ -284,7 +284,7 @@ async function updateUserInfo() {
         document.getElementById("email").textContent = `Email: ${email}`;
         document.getElementById("creationdate").textContent = `UTC Creation date: ${formatUTCDate(creationDate)
             }`;
-        loadprofilepicture(userid);
+        await loadprofilepicture(userid);
     } catch (error) {
         console.error("Failed to fetch user info:", error);
     }
