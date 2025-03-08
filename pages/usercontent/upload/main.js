@@ -99,7 +99,7 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
             document.getElementById("response-message2").classList.remove("error");
             document.getElementById("response-message2").classList.add("success");
             setTimeout(() => {
-                window.location = redirect + "?ucurl=" + data.json().url;
+                window.location = redirect + "?ucurl=" + data.url;
             }, 1000);
         } else {
             const data = await response.json();
