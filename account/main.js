@@ -23,6 +23,12 @@ function promptChoice(closeText, confirmText, message, title) {
         closeButton.textContent = closeText;
         confirmButton.textContent = confirmText;
 
+        if (message == "Can you live with the fact that this cat will be sad when you delete your acount?") {
+            modal.style.backgroundImage = "url('https://account.davidnet.net/icons/cryingcat.jpg')";
+        } else {
+            modal.style.backgroundImage = "none";
+        }
+
         modal.classList.add("active");
 
         function closeModal(result) {
@@ -308,6 +314,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function delete_account() {
     const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete your account and usercontent?", "Account deletion confirmation!");
     if (result) {
+        const result2 = await promptChoice("Cancel", "Yes", "Are you really really sure you want to delete your account and usercontent?", "Account deletion confirmation!");
+        if (!result2) {
+            return;
+        }
+        
+        const result3 = await promptChoice("No", "Yes", "Can you live with the fact that this cat will be sad when you delete your acount?", "Account deletion confirmation!");
+        if (!result3) {
+            return;
+        }
+
         const session_token = await get_session_token();
         try {
             const response = await fetch("https://auth.davidnet.net/get_delete_token", {
