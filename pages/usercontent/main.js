@@ -106,7 +106,7 @@ async function displayuploads(uploads) {
               <td>${formatUTCDate(upload.created_at)}</td>
               <td>
                 <div class="table-btn-row">
-                  <a href="${upload.url}" class="abutton" id="download-btn-${upload.id}" download="${upload.url.slice(45)}">Download</a>
+                  <a href="${upload.url}" class="abutton" id="download-btn-${upload.id}" download">Download</a>
                   <button id="delete-btn-${upload.id}" class="danger-btn">Delete</button>
                 </div>
               </td>
