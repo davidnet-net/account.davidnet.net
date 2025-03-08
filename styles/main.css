@@ -99,6 +99,7 @@ button, .abutton {
 button:hover, .abutton:hover {
   background-color: #9ccfba73;
   transform: scale(1.01);
+  color: white;
 }
 
 button:active, .abutton:active {
