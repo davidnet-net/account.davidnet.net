@@ -62,3 +62,9 @@ export async function get_session_information(params) {
 export async function get_session_token() {
   return localStorage.getItem("session-token");
 }
+
+export async function require_login() {
+  if (!await is_session_valid()) {
+    window.location.href = "https://account.davidnet.net/login/";
+  }
+}
