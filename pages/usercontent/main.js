@@ -97,7 +97,7 @@ async function get_uploads() {
 async function displayuploads(uploads) {
     uploads.forEach(upload => {
         console.log(upload);
-    
+
         const LogHTML = `
             <tr>
               <td class="uid">${upload.id}</td>
@@ -106,23 +106,31 @@ async function displayuploads(uploads) {
               <td>${formatUTCDate(upload.created_at)}</td>
               <td>
                 <div class="table-btn-row">
-                  <a href="${upload.url}" download>Download</a>
+                  <button id="download-btn-${upload.id}" >Download</button>
                   <button id="delete-btn-${upload.id}" class="danger-btn">Delete</button>
                 </div>
               </td>
             </tr> 
         `;
-        //class="abutton" id="download-btn-${upload.id}"
-        //<a href="/images/myw3schoolsimage.jpg" download>Download</a>
-        console.log(`<a href="${upload.url}" class="abutton" id="download-btn-${upload.id}" download">Download</a>`);
         document.getElementById("uploads").insertAdjacentHTML("beforeend", LogHTML);
-    
+
+        // Handle the delete button
+        document.getElementById("download-btn-" + upload.id).addEventListener("click", async () => {
+            const response = await fetch(upload.url);
+            const blob = await response.blob();
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = url.slice(25);
+            link.click();
+            URL.revokeObjectURL(link.href);
+        });
+
         // Handle the delete button
         document.getElementById("delete-btn-" + upload.id).addEventListener("click", async () => {
             await deleteupload(upload.id, upload.url.slice(45));
         });
     });
-    
+
 }
 
 async function deleteupload(id, name) {
