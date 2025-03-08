@@ -84,7 +84,7 @@ input:focus {
   /* Change background on hover */
 }
 
-button {
+button, .abutton {
   all: unset;
   background-color: #9ccfba2c;
   cursor: pointer;

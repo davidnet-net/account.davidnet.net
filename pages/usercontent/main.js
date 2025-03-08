@@ -104,9 +104,18 @@ async function displayuploads(uploads) {
                   <td><a href="${upload.url}">${upload.url.slice(45)}</a></td>
                   <td>${upload.type}</td>
                   <td>${formatUTCDate(upload.created_at)}</td>
-                  <td><div class="table-btn-row"><button>Download</button><button class="danger-btn">Delete</button></div></td>
+                  <td><div class="table-btn-row"><a download="${upload.url}" class="abutton">Download</a><button id="delete-btn-${upload.id}" class="danger-btn">Delete</button></div></td>
                 </tr>
         `;
         document.getElementById("uploads").insertAdjacentHTML("beforeend", LogHTML);
+        document.getElementById("delete-btn-" + upload.id).addEventListener("click", async () => {
+            await deleteupload(upload.id, upload.url.slice(45));
+        });
     });
+}
+
+async function deleteupload(id, name) {
+    const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete " + name + "?", "Usercontent deletion!");
+    if (!result) return;
+    await promptChoice("ERROR", "ERROR", "ERROR", "ERROR!");
 }
