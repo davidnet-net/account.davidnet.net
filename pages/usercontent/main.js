@@ -24,6 +24,12 @@ function promptChoice(closeText, confirmText, message, title) {
         closeButton.textContent = closeText;
         confirmButton.textContent = confirmText;
 
+        if (confirmText === "") {
+            confirmButton.style.display = "none";
+        } else {
+            confirmButton.style.display = "block";
+        }
+
         modal.classList.add("active");
 
         function closeModal(result) {
@@ -142,5 +148,23 @@ async function downloadImage(url, filename) {
 async function deleteupload(id, name) {
     const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete " + name + "?", "Usercontent deletion!");
     if (!result) return;
-    await promptChoice("ERROR", "ERROR", "ERROR", "ERROR!");
+    const session_token = await get_session_token();
+    try {
+        const response = await fetch("https://usercontent.davidnet.net/delete_content", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: session_token, id: id}),
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            await promptChoice("Ok", "", name + " deleted!", "Success!");
+            window.location.reload();
+        } else {
+            await promptChoice("Ok", "):", "We couldnt load uploads!", "Something wrent wrong!");
+        }
+    } catch (error) {
+        console.error("Failed to load totp info:", error);
+        return [];
+    }
 }
