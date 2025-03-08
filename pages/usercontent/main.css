@@ -1,0 +1,73 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#background {
+    min-height: 92vh;
+    height: fit-content;
+    width: 90vw;
+    background-color: #1c1e1f;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-radius: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 600px) {
+    #background {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+.lefttext {
+    text-align: left;
+}
+
+table {
+    color: white;
+    border-collapse: separate;  /* Ensure borders are separate */
+    border-spacing: 0;  /* Remove space between borders */
+    border: 1px solid #ffffff;
+}
+
+th, td {
+    padding: 8px;  /* Add some padding for better spacing */
+}
+
+tr {
+    border-bottom: px solid #ffffff;  /* Adds a bottom border to each row */
+}
+
+td, th {
+    border-right: 1px solid #ffffff7e;  /* Adds a right border to each cell */
+    width: fit-content;
+    min-width: 300px;
+    border-top: 1px solid #ffffff;
+    text-align: center;
+    padding: 5px;
+    gap: 500px;
+}
+
+td:last-child, th:last-child {
+    border-right: none;  /* Remove right border from the last cell in each row */
+}
+ 
+.table-btn-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-btn-row > button {
+    width: 75px;
+}

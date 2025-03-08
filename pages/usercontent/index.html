@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>DN - Usercontent</title>
+
+    <head>
+        <meta name="description" content="Manage your uploads / usercontent of your account">
+        <link rel="icon" href="h/favicon.png" type="image/png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="main.css">
+    </head>
+
+<body>
+    <nav>
+        <a href="https://davidnet.net">Home</a>
+        <a href="https://account.davidnet.net">My Account</a>
+    </nav>
+    <main>
+        <div id="background">
+            <table>
+                <tr>
+                  <th>ID</th>
+                  <th>Content</th>
+                  <th>Type</th>
+                  <th>Actions</th>
+                </tr>
+                <tr>
+                  <td>0</td>
+                  <td><a href="google.com">Google</a></td>
+                  <td>Google</td>
+                  <td><div class="table-btn-row"><button>Download</button><button class="danger-btn">Delete</button></div></td>
+                </tr>
+              </table> 
+        </div>
+    </main>
+    <div id="myModal" class="modal">
+        <div class="modal-header">
+            <h2>Modal Title</h2>
+            <button class="modal-close" id="modal-close-x">x</button>
+        </div>
+        <div class="modal-content">
+            <p>Are you sure?</p>
+        </div>
+        <div class="modal-footer">
+            <button id="modal-close">Close</button>
+            <button class="danger-btn" id="modal-confirm">Confirm</button>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
