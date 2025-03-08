@@ -163,7 +163,6 @@ function displayLog(log) {
             <p>${message}</p>
             <br>
             <p class="lefttext"><strong>UTC Date:</strong><br>${formattedDate}</p>
-            <p class="lefttext"><strong>ID:</strong>${id}</p>
         </div>
     `;
     LogsDiv.insertAdjacentHTML("beforeend", LogHTML);
