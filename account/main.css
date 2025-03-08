@@ -69,3 +69,9 @@ main {
   width: 200px;
   height: fit-content;
 }
+
+#usericon {
+  height: 140px;
+  width: 140px;
+  border-radius: 50%;
+}
