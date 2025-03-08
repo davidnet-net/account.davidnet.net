@@ -77,6 +77,7 @@ function formatUTCDate(utcDate) {
 document.addEventListener("DOMContentLoaded", async () => {
     await require_login();
     await displayuploads(await get_uploads());
+    document.getElementById("deleteallbtn").addEventListener("click", rmall)
 });
 
 async function get_uploads() {
@@ -169,7 +170,34 @@ async function deleteupload(id, name) {
             await promptChoice("Ok", "", "We couldnt load uploads!", "Something wrent wrong!");
         }
     } catch (error) {
-        console.error("Failed to load totp info:", error);
+        console.error("Failed to load usercontent info:", error);
+        return [];
+    }
+}
+
+async function rmall() {
+    const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete everthing?");
+    if (!result) return;
+    const result2 = await promptChoice("Cancel", "Yes", "Are you really really sure you want to delete everthing?");
+    if (!result2) return;
+
+    const session_token = await get_session_token();
+    try {
+        const response = await fetch("https://usercontent.davidnet.net/delete_all_content", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: session_token }),
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            await promptChoice("Ok", "", "All your usercontent is deleted!", "Success!");
+            window.location.reload();
+        } else {
+            await promptChoice("Ok", "", "We couldnt load uploads!", "Something wrent wrong!");
+        }
+    } catch (error) {
+        console.error("Failed to load usercontent info:", error);
         return [];
     }
 }
