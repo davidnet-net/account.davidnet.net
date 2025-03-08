@@ -251,7 +251,7 @@ async function updateUserInfo() {
     try {
         const sessionToken = await get_session_token();
 
-        const [usernameResponse, emailResponse, creationDateResponse] =
+        const [usernameResponse, emailResponse, creationDateResponse, idResponse] =
             await Promise.all([
                 fetch("https://auth.davidnet.net/get_username", {
                     method: "POST",
@@ -268,11 +268,17 @@ async function updateUserInfo() {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: sessionToken }),
                 }),
+                fetch("https://auth.davidnet.net/get_id", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: sessionToken }),
+                }),
             ]);
 
         const username = (await usernameResponse.json()).username;
         const email = (await emailResponse.json()).email;
         const creationDate = (await creationDateResponse.json()).created_at;
+        const userid = (await idResponse.json()).id;
 
         document.getElementById("hello").textContent = `Hello, ${username}`;
         document.getElementById("email").textContent = `Email: ${email}`;
@@ -321,6 +327,29 @@ async function delete_account() {
     } else {
         console.log("Stopped user deletion");
     }
+}
+
+async function loadprofilepicture(userid) {
+        try {
+            const response = await fetch("https://auth.davidnet.net/get_profile_picture", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: userid }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                const profilepicture = result.profile_picture;
+                const usericon = document.getElementById("usericon");
+                usericon.src = profilepicture;
+            } else {
+
+                console.error("usericon collection failed:", result.error);
+            }
+        } catch (error) {
+            console.error("Error during usericon collection:", error);
+        }
 }
 
 
