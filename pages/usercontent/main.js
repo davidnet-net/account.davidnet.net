@@ -116,13 +116,7 @@ async function displayuploads(uploads) {
 
         // Handle the delete button
         document.getElementById("download-btn-" + upload.id).addEventListener("click", async () => {
-            const response = await fetch(upload.url);
-            const blob = await response.blob();
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = url.slice(25);
-            link.click();
-            URL.revokeObjectURL(link.href);
+            await downloadImage(upload.url, upload.url.slice(45));
         });
 
         // Handle the delete button
@@ -132,6 +126,18 @@ async function displayuploads(uploads) {
     });
 
 }
+
+async function downloadImage(url, filename) {
+    const response = await fetch(url, { mode: 'cors' }); // Zorg dat de server CORS toestaat
+    const blob = await response.blob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+
 
 async function deleteupload(id, name) {
     const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete " + name + "?", "Usercontent deletion!");
