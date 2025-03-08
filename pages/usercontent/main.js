@@ -92,7 +92,12 @@ async function get_uploads() {
         if (response.ok) {
             return result;
         } else {
-            await promptChoice("Ok", "):", "We couldnt load uploads!", "Something wrent wrong!");
+            if (response.error === "No uploads found for this user.") {
+                await promptChoice("Ok", "", "You do not have any uploaded content", "No uploads found!");
+            } else {
+                await promptChoice("Ok", "", "We couldnt load uploads!", "Something wrent wrong!");
+            }
+            window.location.href="/";
         }
     } catch (error) {
         console.error("Failed to load totp info:", error);
@@ -161,7 +166,7 @@ async function deleteupload(id, name) {
             await promptChoice("Ok", "", name + " deleted!", "Success!");
             window.location.reload();
         } else {
-            await promptChoice("Ok", "):", "We couldnt load uploads!", "Something wrent wrong!");
+            await promptChoice("Ok", "", "We couldnt load uploads!", "Something wrent wrong!");
         }
     } catch (error) {
         console.error("Failed to load totp info:", error);
