@@ -44,6 +44,7 @@ p,
 h1,
 h2,
 h3 {
+  font-family: sans-serif;
   color: white;
   text-align: center;
 }
@@ -95,12 +96,12 @@ button, .abutton {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-button:hover {
+button:hover, .abutton:hover {
   background-color: #9ccfba73;
   transform: scale(1.01);
 }
 
-button:active {
+button:active, .abutton:active {
   background-color: #7da99c;
   transform: scale(0.95);
   /* Shrink the button on click */
