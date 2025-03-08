@@ -70,7 +70,7 @@ function formatUTCDate(utcDate) {
 
 document.addEventListener("DOMContentLoaded", async () => {
     await require_login();
-    console.log(await get_uploads());
+    await displayuploads(await get_uploads());
 });
 
 async function get_uploads() {
@@ -92,4 +92,10 @@ async function get_uploads() {
         console.error("Failed to load totp info:", error);
         return [];
     }
+}
+
+async function displayuploads(uploads) {
+    uploads.forEach(upload => {
+        console.log(upload);
+    });
 }
