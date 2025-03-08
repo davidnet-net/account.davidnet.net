@@ -1,0 +1,32 @@
+<html>
+
+<head>
+    <style>
+        body {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const ucurl = params.get("ucurl");
+
+        console.log(ucurl); // Geeft de waarde van ucurl of null als het niet bestaat
+
+        if (ucurl) {
+            const response = await fetch("https://auth.davidnet.net/set_profile_picture", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("session-tokn"), url: ucurl }),
+            });
+            cosole.log(response);
+            console.log(result.json()); 
+        }
+
+        window.location.href = "https://account.davidnet.net/";
+
+    </script>
+</body>
+
+</html>
