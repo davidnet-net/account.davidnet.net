@@ -10,7 +10,7 @@ main {
   width: 90vw;
   background-color: #1c1e1f;
   text-align: center;
-  display: flex;
+  display: none;
   flex-direction: row;
   flex-wrap: wrap;
   border-radius: 15px;
@@ -74,4 +74,51 @@ main {
   height: 140px;
   width: 140px;
   border-radius: 50%;
+}
+
+
+.loader {
+  width: 90px;
+  height: 90px;
+  position: relative;
+  overflow: hidden;
+}
+
+.loader:before,
+.loader:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, 100%) scale(0);
+  animation: push 2s infinite ease-in;
+}
+
+.loader:after {
+  animation-delay: 1s;
+}
+
+@keyframes push {
+  0% {
+    transform: translate(-50%, 100%) scale(1);
+  }
+
+  15%,
+  25% {
+    transform: translate(-50%, 50%) scale(1);
+  }
+
+  50%,
+  75% {
+    transform: translate(-50%, -30%) scale(0.5);
+  }
+
+  80%,
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+  }
 }

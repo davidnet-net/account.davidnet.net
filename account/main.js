@@ -297,7 +297,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     await load2famanager();
 
     document.getElementById("delete-account-btn").addEventListener("click", delete_account);
-    
+    document.getElementById("background").style.display = "flex";
+    document.getElementById("loader").style.display = "none";
+
     //! Lazy stuff
     await loadLogs();
 });
