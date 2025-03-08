@@ -92,7 +92,7 @@ async function get_uploads() {
         if (response.ok) {
             return result;
         } else {
-            if (response.error === "No uploads found for this user.") {
+            if (result.error === "No uploads found for this user.") {
                 await promptChoice("Ok", "", "You do not have any uploaded content", "No uploads found!");
             } else {
                 await promptChoice("Ok", "", "We couldnt load uploads!", "Something wrent wrong!");
