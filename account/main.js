@@ -295,13 +295,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadSessions();
     await updateUserInfo();
     await load2famanager();
+    await loadLogs();
 
     document.getElementById("delete-account-btn").addEventListener("click", delete_account);
-    document.getElementById("background").style.display = "flex";
-    document.getElementById("loader").style.display = "none";
-
-    //! Lazy stuff
-    await loadLogs();
+    
+    setTimeout(() => {
+        document.getElementById("background").style.display = "flex";
+        document.getElementById("loader").style.display = "none";
+    }, 1000);
 });
 
 async function delete_account() {
@@ -333,26 +334,26 @@ async function delete_account() {
 }
 
 async function loadprofilepicture(userid) {
-        try {
-            const response = await fetch("https://auth.davidnet.net/get_profile_picture", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: userid }),
-            });
+    try {
+        const response = await fetch("https://auth.davidnet.net/get_profile_picture", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: userid }),
+        });
 
-            const result = await response.json();
+        const result = await response.json();
 
-            if (response.ok) {
-                const profilepicture = result.profile_picture;
-                const usericon = document.getElementById("usericon");
-                usericon.src = profilepicture;
-            } else {
+        if (response.ok) {
+            const profilepicture = result.profile_picture;
+            const usericon = document.getElementById("usericon");
+            usericon.src = profilepicture;
+        } else {
 
-                console.error("usericon collection failed:", result.error);
-            }
-        } catch (error) {
-            console.error("Error during usericon collection:", error);
+            console.error("usericon collection failed:", result.error);
         }
+    } catch (error) {
+        console.error("Error during usericon collection:", error);
+    }
 }
 
 
@@ -375,7 +376,7 @@ async function load2famanager() {
                 document.getElementById("enable-totp-btn").addEventListener("click", async () => {
                     const result = await promptChoice("Cancel", "Yes", "Are you sure you want to enable TOTP?", "Account 2FA security!");
                     if (result == true) { window.location.href = "https://account.davidnet.net/pages/2fa/totp" };
-                });                
+                });
             }
         } else {
             await promptChoice("Ok", "):", "We couldnt load 2FA management!", "Something wrent wrong!");
