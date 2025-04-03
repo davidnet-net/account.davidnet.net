@@ -22,7 +22,7 @@ export async function is_session_valid() {
   }
 }
 
-export async function get_session_information(params) {
+export async function get_session_information() {
   const session_token = localStorage.getItem("session-token");
   const requestData = {
     token: session_token,
