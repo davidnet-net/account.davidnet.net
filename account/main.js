@@ -447,8 +447,8 @@ async function disabletotp() {
 }
 
 async function changedesc() {
-    const result = await promptChoice("Cancel", "Change", "Enter your new description!", "Change account description", true);
-    if (!result) {
+    const newdesc = await promptChoice("Cancel", "Change", "Enter your new description!", "Change account description", true);
+    if (!newdesc) {
         return
     }
     const session_token = await get_session_token();
@@ -457,7 +457,7 @@ async function changedesc() {
         const response = await fetch("https://auth.davidnet.net/set_desc", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: session_token, description: result }),
+            body: JSON.stringify({ token: session_token, description: newdesc }),
         });
         const result = await response.json();
 
@@ -467,7 +467,7 @@ async function changedesc() {
             await promptChoice("Ok", "):", "Something wrent wrong", "Something went wrong!");
         }
     } catch (error) {
-        console.error("Failed to disable TOTP:", error);
+        console.error("Failed to change desc:", error);
     } finally {
         disableButton.disabled = false;
     }
