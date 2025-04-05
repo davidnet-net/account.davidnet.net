@@ -10,6 +10,10 @@ function promptChoice(closeText, confirmText, message, title, isinput) {
     if (isModalOpen) return false;
     isModalOpen = true;
 
+    if isinput == undefined {
+        isinput = false;
+    }
+
     return new Promise((resolve) => {
         const modal = document.getElementById("myModal");
         const modalTitle = modal.querySelector(".modal-header h2");
