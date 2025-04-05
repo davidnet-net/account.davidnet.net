@@ -96,19 +96,25 @@ async function get_uploads() {
             if (result.error === "No uploads found for this user.") {
                 await promptChoice("Ok", "", "You do not have any uploaded content", "No uploads found!");
             } else {
-                await promptChoice("Ok", "", "We couldnt load uploads!", "Something wrent wrong!");
+                await promptChoice("Ok", "", "We couldn't load uploads!", "Something went wrong!");
             }
-            window.location.href="/";
+            window.location.href = "/";
         }
     } catch (error) {
-        console.error("Failed to load totp info:", error);
+        console.error("Failed to load uploads:", error);
         return [];
     }
 }
 
 async function displayuploads(uploads) {
+    // Zoek de hoogste ID van alle 'user_profile' uploads
+    const userProfiles = uploads.filter(u => u.type === "user_profile");
+    const maxProfileId = userProfiles.length > 0 ? Math.max(...userProfiles.map(u => u.id)) : null;
+
     uploads.forEach(upload => {
         console.log(upload);
+
+        const isCurrentProfile = upload.type === "user_profile" && upload.id === maxProfileId;
 
         const LogHTML = `
             <tr>
@@ -119,24 +125,25 @@ async function displayuploads(uploads) {
               <td>
                 <div class="table-btn-row">
                   <button id="download-btn-${upload.id}" >Download</button>
-                  <button id="delete-btn-${upload.id}" class="danger-btn">Delete</button>
+                  ${isCurrentProfile ? "" : `<button id="delete-btn-${upload.id}" class="danger-btn">Delete</button>`}
                 </div>
               </td>
             </tr> 
         `;
         document.getElementById("uploads").insertAdjacentHTML("beforeend", LogHTML);
 
-        // Handle the delete button
+        // Download knop
         document.getElementById("download-btn-" + upload.id).addEventListener("click", async () => {
             await downloadImage(upload.url, upload.url.slice(45));
         });
 
-        // Handle the delete button
-        document.getElementById("delete-btn-" + upload.id).addEventListener("click", async () => {
-            await deleteupload(upload.id, upload.url.slice(45));
-        });
+        // Delete knop, alleen als het niet het actieve profiel is
+        if (!isCurrentProfile) {
+            document.getElementById("delete-btn-" + upload.id).addEventListener("click", async () => {
+                await deleteupload(upload.id, upload.url.slice(45));
+            });
+        }
     });
-
 }
 
 async function downloadImage(url, filename) {
@@ -150,7 +157,6 @@ async function downloadImage(url, filename) {
     URL.revokeObjectURL(link.href);
 }
 
-
 async function deleteupload(id, name) {
     const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete " + name + "?", "Usercontent deletion!");
     if (!result) return;
@@ -159,7 +165,7 @@ async function deleteupload(id, name) {
         const response = await fetch("https://usercontent.davidnet.net/delete_content", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: session_token, id: id}),
+            body: JSON.stringify({ token: session_token, id: id }),
         });
         const result = await response.json();
 
@@ -167,18 +173,18 @@ async function deleteupload(id, name) {
             await promptChoice("Ok", "", name + " deleted!", "Success!");
             window.location.reload();
         } else {
-            await promptChoice("Ok", "", "We couldnt load uploads!", "Something wrent wrong!");
+            await promptChoice("Ok", "", "We couldn't delete the upload!", "Something went wrong!");
         }
     } catch (error) {
-        console.error("Failed to load usercontent info:", error);
+        console.error("Failed to delete usercontent:", error);
         return [];
     }
 }
 
 async function rmall() {
-    const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete everthing?");
+    const result = await promptChoice("Cancel", "Yes", "Are you sure you want to delete everything?");
     if (!result) return;
-    const result2 = await promptChoice("Cancel", "Yes", "Are you really really sure you want to delete everthing?");
+    const result2 = await promptChoice("Cancel", "Yes", "Are you really really sure you want to delete everything?");
     if (!result2) return;
 
     const session_token = await get_session_token();
@@ -194,10 +200,10 @@ async function rmall() {
             await promptChoice("Ok", "", "All your usercontent is deleted!", "Success!");
             window.location.reload();
         } else {
-            await promptChoice("Ok", "", "We couldnt load uploads!", "Something wrent wrong!");
+            await promptChoice("Ok", "", "We couldn't delete all uploads!", "Something went wrong!");
         }
     } catch (error) {
-        console.error("Failed to load usercontent info:", error);
+        console.error("Failed to delete all usercontent:", error);
         return [];
     }
 }
