@@ -72,8 +72,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const url = window.location.href;
     const params = new URLSearchParams(new URL(url).search);
     const id = params.get("id");
+    const does_user_exists = await does_user_exists(id);
 
-    if (await does_user_exists === true ) {
+    if ( does_user_exists === true ) {
         const username = await get_username(id);
         const profile_picture = await get_profile_picture(id);
         const description = await get_desc(id);
