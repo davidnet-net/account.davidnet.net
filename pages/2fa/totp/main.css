@@ -82,6 +82,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px;
 }
 
 .centerpls {
@@ -90,7 +91,6 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10px;
 }
 
 .qrcode-container {
