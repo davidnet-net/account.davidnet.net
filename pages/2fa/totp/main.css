@@ -92,7 +92,8 @@ main {
     align-items: center;
     padding: 20px;
     background-color: white;
-    padding: 10px;
+    padding: 2px;
+    border-radius: 20px;
 }
 
 
