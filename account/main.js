@@ -41,6 +41,11 @@ function promptChoice(closeText, confirmText, message, title, isinput) {
             modalinput.style.display = "none";
         }
 
+        if (confirmText === "") {
+            confirmButton.style.display = "none";
+        } else {
+            confirmButton.style.display = "block";
+        }
 
         modal.classList.add("active");
 
@@ -466,13 +471,11 @@ async function changedesc() {
         const result = await response.json();
 
         if (response.ok) {
-            await promptChoice("Ok", "):", "Desc updated!", "Check your profile!");
+            await promptChoice("Ok", "", "Desc updated!", "Check your profile!");
         } else {
-            await promptChoice("Ok", "):", "Something wrent wrong", "Something went wrong!");
+            await promptChoice("Ok", "", "Something wrent wrong", "Something went wrong!");
         }
     } catch (error) {
         console.error("Failed to change desc:", error);
-    } finally {
-        disableButton.disabled = false;
     }
 }
