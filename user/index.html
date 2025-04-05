@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>DN - User</title>
+
+    <head>
+        <meta name="description" content="Manage your davidnet account">
+        <link rel="icon" href="h/favicon.png" type="image/png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/styles/main.css">
+        <link rel="stylesheet" href="main.css">
+    </head>
+
+<body>
+    <nav>
+        <a href="https://davidnet.net">Home</a>
+        <a href="https://account.davidnet.net/">Account</a>
+    </nav>
+    <main>
+        <div id="background">
+            <img src="/icons/noprofileicon.png" alt="Profile Icon" id="profile-icon">
+            <h1 id="username">Username</h1>
+            <p id="created"></p>
+            <p id="desc"></p>
+        </div>
+        <div id="loader"><span class="loader"></span></div>
+    </main>
+    <div id="myModal" class="modal">
+        <div class="modal-header">
+            <h2>Modal Title</h2>
+            <button class="modal-close" id="modal-close-x">x</button>
+        </div>
+        <div class="modal-content">
+            <p>Are you sure?</p>
+        </div>
+        <div class="modal-footer">
+            <button id="modal-close">Close</button>
+            <button class="danger-btn" id="modal-confirm">Confirm</button>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
