@@ -15,11 +15,22 @@ export async function is_session_valid() {
 
   if (response.ok) {
     console.log("Session valid!");
+    SetSessionCookie(session_token);
     return true;
   } else {
     console.log("Session invalid");
     return false;
   }
+}
+
+function SetSessionCookie(sessionToken) {
+  const cookieName = "session_token=" + sessionToken;
+  const expires = new Date();
+  expires.setTime(expires.getTime() + (30 * 60 * 1000)); // Stelt de vervaltijd in (bijvoorbeeld 30 minuten)
+  const expiresString = "expires=" + expires.toUTCString();
+  
+  // Zet de cookie met de juiste parameters
+  document.cookie = `${cookieName}; domain=.davidnet.net; path=/; ${expiresString}; Secure; SameSite=None`;
 }
 
 export async function get_session_information() {
