@@ -90,7 +90,6 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2px;
     background-color: white;
     border-radius: 20px;
 }
