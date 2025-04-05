@@ -10,7 +10,7 @@ function promptChoice(closeText, confirmText, message, title, isinput) {
     if (isModalOpen) return false;
     isModalOpen = true;
 
-    if isinput == undefined {
+    if (isinput == undefined) {
         isinput = false;
     }
 
