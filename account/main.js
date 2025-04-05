@@ -38,7 +38,7 @@ function promptChoice(closeText, confirmText, message, title, isinput) {
         if (isinput == true) {
             modalinput.style.display = "block";
         } else {
-            modalinput.style.display = "false";
+            modalinput.style.display = "none";
         }
 
 
