@@ -107,14 +107,13 @@ async function get_uploads() {
 }
 
 async function displayuploads(uploads) {
-    // Zoek de hoogste ID van alle 'user_profile' uploads
-    const userProfiles = uploads.filter(u => u.type === "user_profile");
+    const userProfiles = uploads.filter(u => u.type === "profile_picture");
     const maxProfileId = userProfiles.length > 0 ? Math.max(...userProfiles.map(u => u.id)) : null;
 
     uploads.forEach(upload => {
         console.log(upload);
 
-        const isCurrentProfile = upload.type === "user_profile" && upload.id === maxProfileId;
+        const isCurrentProfile = upload.type === "profile_picture" && upload.id === maxProfileId;
 
         const LogHTML = `
             <tr>
