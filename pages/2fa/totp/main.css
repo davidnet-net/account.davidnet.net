@@ -91,6 +91,8 @@ main {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    background-color: white;
+    padding: 10px;
 }
 
 
