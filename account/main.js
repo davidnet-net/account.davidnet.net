@@ -6,7 +6,7 @@ import {
 
 let isModalOpen = false;
 
-function promptChoice(closeText, confirmText, message, title) {
+function promptChoice(closeText, confirmText, message, title, isinput) {
     if (isModalOpen) return false;
     isModalOpen = true;
 
@@ -17,24 +17,37 @@ function promptChoice(closeText, confirmText, message, title) {
         const closeButton = modal.querySelector("#modal-close");
         const closeButton_x = document.getElementById("modal-close-x");
         const confirmButton = modal.querySelector("#modal-confirm");
+        const modalinput = document.getElementById("modal-input");
 
         modalTitle.textContent = title;
         modalMessage.textContent = message;
         closeButton.textContent = closeText;
         confirmButton.textContent = confirmText;
-
+        modalinput.value = "";
+        
         if (message == "Can you live with the fact that this cat will be sad when you delete your acount?") {
             modal.style.backgroundImage = "url('https://account.davidnet.net/icons/cryingcat.jpg')";
         } else {
             modal.style.backgroundImage = "none";
         }
 
+        if (isinput == true) {
+            modalinput.style.display = "block";
+        } else {
+            modalinput.style.display = "false";
+        }
+
+
         modal.classList.add("active");
 
         function closeModal(result) {
             modal.classList.remove("active");
             isModalOpen = false;
-            resolve(result);
+            if (isinput == true) {
+                resolve(modalinput.value);
+            } else {
+                resolve(result);
+            }
             removeEventListeners();
         }
 
@@ -305,7 +318,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadLogs();
 
     document.getElementById("delete-account-btn").addEventListener("click", delete_account);
-    
+    document.getElementById("changedesc").addEventListener("click", changedesc);
+
     setTimeout(() => {
         document.getElementById("background").style.display = "flex";
         document.getElementById("loader").style.display = "none";
@@ -424,6 +438,33 @@ async function disabletotp() {
             window.location.reload();
         } else {
             await promptChoice("Ok", "):", "We couldn't process 2FA changes!", "Something went wrong!");
+        }
+    } catch (error) {
+        console.error("Failed to disable TOTP:", error);
+    } finally {
+        disableButton.disabled = false;
+    }
+}
+
+async function changedesc() {
+    const result = await promptChoice("Cancel", "Change", "Enter your new description!", "Change account description", true);
+    if (!result) {
+        return
+    }
+    const session_token = await get_session_token();
+
+    try {
+        const response = await fetch("https://auth.davidnet.net/set_desc", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: session_token, description: result }),
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            await promptChoice("Ok", "):", "Desc updated!", "Check your profile!");
+        } else {
+            await promptChoice("Ok", "):", "Something wrent wrong", "Something went wrong!");
         }
     } catch (error) {
         console.error("Failed to disable TOTP:", error);
