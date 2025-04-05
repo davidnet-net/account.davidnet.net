@@ -104,7 +104,7 @@ main {
     height: 40px;
     font-size: 20px;
     text-align: center;
-    border: 2px solid #000000;
+    border: 2px solid #7a7a7a;
     border-radius: 5px;
     outline: none;
     transition: border-color 0.2s;
