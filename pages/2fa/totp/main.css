@@ -82,6 +82,9 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px;
 }
 
 .centerpls {
@@ -90,8 +93,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
-    border-radius: 20px;
+
 }
 
 
