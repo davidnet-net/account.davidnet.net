@@ -289,8 +289,8 @@ async function updateUserInfo() {
         document.getElementById("hello").textContent = `Hello, ${username}`;
         document.getElementById("email").textContent = `Email: ${email}`;
         document.getElementById("creationdate").textContent = `UTC Creation date: ${formatUTCDate(creationDate)}`;
-        document.getElementById("goprofile").href = `https://account.davidnet.net/user/id?=${userid}`;
-        
+        document.getElementById("goprofile").href = `https://account.davidnet.net/user?id=${userid}`;
+
         await loadprofilepicture(userid);
     } catch (error) {
         console.error("Failed to fetch user info:", error);
