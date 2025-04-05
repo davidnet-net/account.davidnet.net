@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("username").textContent = username;
         document.getElementById("profile-icon").src = profile_picture;
         document.getElementById("desc").textContent = description;
-        document.getElementById("created").src= formatUTCDate(created_at);
+        document.getElementById("created").textContent = formatUTCDate(created_at);
 
         document.getElementById("background").style.display = "flex";
         document.getElementById("loader").style.display = "none";
