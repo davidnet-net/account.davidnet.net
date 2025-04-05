@@ -82,9 +82,6 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
-    border-radius: 20px;
-    padding: 10px;
 }
 
 .centerpls {
@@ -96,6 +93,11 @@ main {
 
 }
 
+.qrcode-container {
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px;
+}
 
 .totp-box {
     width: 40px;
