@@ -37,7 +37,7 @@ main {
   display: flex;
   flex-direction: column;
   width: 200px;
-  height: 500px;
+  height: 1000px;
 }
 
 #sessions, #logs {
