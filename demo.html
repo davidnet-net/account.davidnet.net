@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vingerafdruk Login Demo</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: #4caf50;
+      color: white;
+    }
+    #status {
+      margin-top: 2rem;
+      font-size: 1rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔐 Vingerafdruk Login</h2>
+  <button onclick="doFingerprint()">Scan je vinger</button>
+  <div id="status">Wacht op actie...</div>
+
+  <script>
+    function bufferToBase64url(buffer) {
+      return btoa(String.fromCharCode(...new Uint8Array(buffer)))
+        .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    }
+
+    function base64urlToBuffer(base64url) {
+      const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
+      const binary = atob(base64);
+      const buffer = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        buffer[i] = binary.charCodeAt(i);
+      }
+      return buffer.buffer;
+    }
+
+    async function doFingerprint() {
+      document.getElementById("status").innerText = "⏳ Fingerprint wordt gevraagd...";
+
+      const publicKey = {
+        challenge: Uint8Array.from(window.crypto.getRandomValues(new Uint8Array(32))),
+        timeout: 60000,
+        userVerification: "required",
+        rpId: window.location.hostname,
+        allowCredentials: [] // geen registratie = probeer alle
+      };
+
+      try {
+        const cred = await navigator.credentials.get({ publicKey });
+        document.getElementById("status").innerText = "✅ Fingerprint gescand!";
+        console.log("Assertion:", cred);
+      } catch (err) {
+        document.getElementById("status").innerText = "❌ Mislukt of geannuleerd.";
+        console.error(err);
+      }
+    }
+  </script>
+
+</body>
+</html>
