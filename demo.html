@@ -1,37 +1,46 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vingerafdruk Login Demo</title>
+  <title>WebAuthn Demo: Register & Login</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
+      max-width: 400px;
+      margin: 2rem auto;
       text-align: center;
-      padding: 2rem;
+      padding: 1rem;
     }
     button {
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      border-radius: 0.5rem;
+      font-size: 1.1rem;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      border-radius: 6px;
       border: none;
       background: #4caf50;
       color: white;
+      cursor: pointer;
+      width: 100%;
     }
     #status {
-      margin-top: 2rem;
-      font-size: 1rem;
-      color: #333;
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      color: #222;
+      min-height: 2rem;
     }
   </style>
 </head>
 <body>
 
-  <h2>🔐 Vingerafdruk Login</h2>
-  <button onclick="doFingerprint()">Scan je vinger</button>
-  <div id="status">Wacht op actie...</div>
+  <h1>WebAuthn Fingerprint Demo</h1>
+  <button id="registerBtn">Register (create)</button>
+  <button id="loginBtn" disabled>Login (get)</button>
+
+  <div id="status">Click register to get started</div>
 
   <script>
+    // Helper functions to convert base64url <-> ArrayBuffer
     function bufferToBase64url(buffer) {
       return btoa(String.fromCharCode(...new Uint8Array(buffer)))
         .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -41,32 +50,96 @@
       const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
       const binary = atob(base64);
       const buffer = new Uint8Array(binary.length);
-      for (let i = 0; i < binary.length; i++) {
-        buffer[i] = binary.charCodeAt(i);
-      }
+      for(let i=0; i<binary.length; i++) buffer[i] = binary.charCodeAt(i);
       return buffer.buffer;
     }
 
-    async function doFingerprint() {
-      document.getElementById("status").innerText = "⏳ Fingerprint wordt gevraagd...";
+    // Stored credential ID in localStorage
+    let credentialId = null;
 
-      const publicKey = {
-        challenge: Uint8Array.from(window.crypto.getRandomValues(new Uint8Array(32))),
-        timeout: 60000,
-        userVerification: "required",
-        rpId: window.location.hostname,
-        allowCredentials: [] // geen registratie = probeer alle
-      };
+    // Register function (create)
+    async function register() {
+      const status = document.getElementById("status");
+      status.textContent = "Starting registration...";
 
       try {
-        const cred = await navigator.credentials.get({ publicKey });
-        document.getElementById("status").innerText = "✅ Fingerprint gescand!";
-        console.log("Assertion:", cred);
+        const publicKey = {
+          challenge: crypto.getRandomValues(new Uint8Array(32)),
+          rp: {
+            name: "Demo site",
+            id: window.location.hostname
+          },
+          user: {
+            id: Uint8Array.from('demo-user-1234', c => c.charCodeAt(0)),
+            name: "demo-user",
+            displayName: "Demo User"
+          },
+          pubKeyCredParams: [
+            { type: "public-key", alg: -7 },   // ES256
+            { type: "public-key", alg: -257 }  // RS256
+          ],
+          authenticatorSelection: {
+            userVerification: "required",
+            authenticatorAttachment: "platform" // fingerprint sensor (not USB keys)
+          },
+          timeout: 60000,
+          attestation: "none"
+        };
+
+        const credential = await navigator.credentials.create({ publicKey });
+
+        // Save credential ID as base64url
+        credentialId = bufferToBase64url(credential.rawId);
+        localStorage.setItem("credentialId", credentialId);
+
+        status.textContent = "✅ Registration successful! You can now login.";
+        document.getElementById("loginBtn").disabled = false;
       } catch (err) {
-        document.getElementById("status").innerText = "❌ Mislukt of geannuleerd.";
-        console.error(err);
+        status.textContent = "❌ Registration failed: " + err.message;
       }
     }
+
+    // Login function (get)
+    async function login() {
+      const status = document.getElementById("status");
+      status.textContent = "Starting login...";
+
+      try {
+        const storedId = localStorage.getItem("credentialId");
+        if (!storedId) throw new Error("No registered credential found.");
+
+        const publicKey = {
+          challenge: crypto.getRandomValues(new Uint8Array(32)),
+          allowCredentials: [{
+            id: base64urlToBuffer(storedId),
+            type: "public-key",
+            transports: ["internal"]
+          }],
+          userVerification: "required",
+          timeout: 60000
+        };
+
+        const assertion = await navigator.credentials.get({ publicKey });
+
+        status.textContent = "✅ Login successful! You are verified.";
+        console.log("Assertion:", assertion);
+      } catch (err) {
+        status.textContent = "❌ Login failed: " + err.message;
+      }
+    }
+
+    // Button event listeners
+    document.getElementById("registerBtn").addEventListener("click", register);
+    document.getElementById("loginBtn").addEventListener("click", login);
+
+    // Check if credential already registered on load
+    window.onload = () => {
+      if (localStorage.getItem("credentialId")) {
+        credentialId = localStorage.getItem("credentialId");
+        document.getElementById("loginBtn").disabled = false;
+        document.getElementById("status").textContent = "✅ Credential found, ready to login.";
+      }
+    };
   </script>
 
 </body>
